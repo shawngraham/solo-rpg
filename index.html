@@ -270,10 +270,77 @@
         }
 
         // --- JENGA TOWER SIMULATION ---
-        const safeMessages = ["The tower wobbles, but holds steady.", "The tower shifts slightly as you pull out the block.", "A gentle sway, but the tower holds firm.", "The blocks settle into their new position.", "A successful pull; the tower barely notices."];
-        const dangerMessages = ["The tower is leaning quite dangerously!", "The tower sways violently as you touch it.", "The structure groans under its own weight.", "The blocks shift precariously.", "Each movement threatens to bring it all down."];
-        const criticalMessages = ["A crack splinters through the tower's base!", "You feel the entire structure give way slightly as you pull.", "Dust rains down as the tower groans under immense pressure.", "The world seems to hold its breath; this could be the end.", "Every block feels like a vital organ; one wrong move..."];
+        const safeMessages = [
+    // Represents moments of finding focus or pushing back the despair.
+    "You take a steadying breath. For now, you are in control.",
+    "The panic recedes, leaving a fragile stillness in your mind.",
+    "You focus on a single, concrete detail, anchoring yourself to reality.",
+    "A flicker of the person you once were shines through the cracks.",
+    "The voice in the back of your head falls silent. A brief, welcome respite.",
+    "You push the intrusive thought away with surprising force.",
+    "For a moment, the crushing weight of despair lifts, and you can breathe.",
+    "Clarity cuts through the fog of fear, sharp and clean.",
+    "You manage a grim smile. You're not broken yet.",
+    "The memory is painful, but you face it and it loses its power.",
+    "Your hands stop shaking. A small victory, but a vital one.",
+    "You recite the names of the people you've lost, turning grief into a shield.",
+    "The wave of nausea passes. You find your footing in your own mind.",
+    "You remember why you started this. The reason is enough for one more step.",
+    "A moment of defiance. You will not surrender this easily.",
+    "The grim work ahead focuses your mind, pushing the fear to the periphery.",
+    "You find a reserve of strength you didn't know you had.",
+    "The rhythmic beat of your own heart is a steady drum against the chaos.",
+    "You push down the scream that was building in your throat. Silence returns.",
+    "The paranoia subsides. The shadows are just shadows."
+];
 
+        const dangerMessages = [
+    // Represents the fraying of sanity, rising panic, and losing the fight.
+    "A deep tremor of dread runs through you, shaking your resolve to its core.",
+    "The edges of your vision swim. Is any of this real?",
+    "A memory you can't place flashes behind your eyes, violent and terrifying.",
+    "Your own thoughts feel alien, twisting into shapes of fear and doubt.",
+    "The voice is back, whispering truths you don't want to hear.",
+    "That was a mistake. A piece of your composure cracks and falls away.",
+    "A cold sweat breaks out on your brow. The fear is a physical presence.",
+    "You find yourself staring at nothing, lost for a moment you can't account for.",
+    "The effort of holding yourself together is becoming exhausting.",
+    "A wave of hopelessness washes over you, cold and suffocating.",
+    "Your hands begin to tremble uncontrollably. You hide them from your own sight.",
+    "The faces of the dead flicker in your peripheral vision.",
+    "You catch your own reflection and, for a terrifying second, don't recognize yourself.",
+    "The silence is no longer comforting; it's filled with unspoken threats.",
+    "A sharp, stabbing pain lances through your skull, born of pure stress.",
+    "Paranoia sinks its claws in deep. Every shadow moves, every sound is a threat.",
+    "You feel a hysterical laugh bubbling up and have to choke it down.",
+    "The mask of sanity you wear is slipping, and you can feel it.",
+    "Your memories feel like a story you read about someone else.",
+    "You are losing the thread of your own thoughts, a labyrinth with no escape."
+];
+
+        const criticalMessages = [
+    // Represents the final, irreversible snap of the character's mind.
+    "Something vital inside you breaks. The person you were is gone.",
+    "The last thread of your sanity snaps with a deafening, silent sound.",
+    "This is it. The point of no return. You welcome the abyss.",
+    "Your mind fractures, reality shattering into a million meaningless pieces.",
+    "The scream finally comes, raw and endless, tearing its way out of you.",
+    "The world dissolves into a meaningless, terrifying swirl of color and noise.",
+    "You let go. The fall into madness is blessedly quiet.",
+    "The whispers are screaming now, and you are screaming with them.",
+    "Your most cherished memory corrupts and turns to ash. Nothing is left.",
+    "The person looking through your eyes is no longer you.",
+    "A final, violent shudder, and then... nothing. The lights are out.",
+    "You finally understand the terrible, beautiful truth. It drives you mad.",
+    "You close your eyes, and when you open them, the world you knew is gone forever.",
+    "The struggle is over. You surrender to the encroaching darkness.",
+    "All the faces, all the memories, all the pain—it collapses inward into a single point of blackness.",
+    "The last bastion of your mind crumbles to dust.",
+    "There is no 'you' anymore. Only the fear.",
+    "The cacophony in your head stops. The absolute silence is the true end.",
+    "You laugh, a broken, empty sound that doesn't belong to you.",
+    "And in the end, you see the monster. And it has your face."
+];
         function getRandomMessage(array) {
             return array[Math.floor(Math.random() * array.length)];
         }
