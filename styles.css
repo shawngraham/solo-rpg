@@ -231,6 +231,9 @@ h3 {
 .instructions-panel h2, .instructions-panel h3 {
     color: #2c3e50;
 }
+.instructions-panel p {
+    color: #2c3e50;
+}
 .instructions-panel a {
     color: #4a6fa5;
     text-decoration: none;
