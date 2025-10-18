@@ -1,0 +1,24 @@
+{
+  "games": [
+    {
+      "name": "Whoever Finds This Paper",
+      "author": "S. Graham",
+      "url": "https://shawngraham.github.io/solo-rpg/Whoever%20Finds%20This%20Paper%20v1.0%20S%20Graham.pdf"
+    },
+    {
+      "name": "The Cave",
+      "author": "S. Graham",
+      "url": "https://shawngraham.github.io/solo-rpg/The%20Cave%20v1.0%20Shawn%20Graham.pdf"
+    },
+    {
+      "name": "In The Forest Dark",
+      "author": "S. Graham",
+      "url": "https://shawngraham.github.io/solo-rpg/In%20The%20Forest%20Dark%20v1.0%20Shawn%20Graham.pdf"
+    },
+    {
+      "name": "Degrees of Difficulty",
+      "author": "S. Graham",
+      "url": "https://shawngraham.github.io/solo-rpg/Degrees%20of%20Difficulty%20v1.0%20by%20Shawn%20Graham.pdf"
+    }
+  ]
+}

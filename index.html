@@ -1,249 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        html {
- margin: 0px;
- box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
- background: radial-gradient(circle at 50% 0%,#e1e1e1 10%,#555);
- height: 100%;
- width: 100%;
- overflow-x: hidden;
-}
-        body {
- margin: 20px;
- height: 100%;
- width: 100%;
- font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
- overflow-x: hidden;
-}
-        .container {
-            display: flex;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-            height: 140vh;
-        }
-        .fate-panel, .journal-panel {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .fate-panel {
-            flex: 1;
-        }
-        .journal-panel {
-            flex: 2;
-        }
-        .dice-container {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .die {
-            width: 60px;
-            height: 60px;
-            background: #f8f8f8;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        button {
-            background: #4a4a4a;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-        button:hover {
-            background: #666;
-        }
-        .result {
-            margin-top: 10px;
-            padding: 10px;
-            background: #f8f8f8;
-            border-radius: 5px;
-        }
-        #journal {
-            width: 97%;
-            height: calc(80% - 60px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            resize: none;
-            font-family: inherit;
-            line-height: 1.6;
-        }
-        .section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        h2 {
-            margin-top: 0;
-            color: #333;
-        }
-        .card-display {
-            min-height: 40px;
-            padding: 10px;
-            background: #f8f8f8;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .save-section {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
-        .save-button {
-            flex: 1;
-            background: #4CAF50;
-        }
-        .auto-save-indicator {
-            padding: 5px;
-            color: #666;
-            font-size: 0.8em;
-            text-align: right;
-        }
-        .card-history {
-            margin-top: 10px;
-            max-height: 150px;
-            overflow-y: auto;
-            background: #f8f8f8;
-            border-radius: 5px;
-            padding: 10px;
-        }
-        .card-history-item {
-            padding: 5px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9em;
-            display: flex;
-            justify-content: space-between;
-        }
-        .card-history-item:last-child {
-            border-bottom: none;
-        }
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .clear-history {
-            font-size: 0.8em;
-            padding: 3px 8px;
-            background: #ff4444;
-        }
-        .red-card {
-            color: #ff0000;
-        }
-        .instructions-panel {
-            background: #fffdf7;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e0dcd0;
-        }
-        .dice-pool-info {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 5px;
-            padding: 5px;
-            background: #f8f8f8;
-            border-radius: 3px;
-        }
-        .stability-critical {
-            color: #ff4444;
-            font-weight: bold;
-        }
-        .stability-warning {
-            color: #ff8c00;
-        }
-        .stability-safe {
-            color: #4CAF50;
-        }
-        .collapse-message {
-            color: #ff4444;
-            font-weight: bold;
-            font-size: 1.2em;
-            text-align: center;
-            padding: 20px;
-            background: #fff8f8;
-            border-radius: 5px;
-            margin-top: 10px;
-            border: 2px solid #ff4444;
-        }
-        .narrative-message {
-            font-style: italic;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-        .safe-message {
-            background: #f0f8f0;
-            color: #2e7d32;
-        }
-        .warning-message {
-            background: #fff3e0;
-            color: #ef6c00;
-        }
-        .salvation-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.salvation-value {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.salvation-value button {
-    width: 30px;
-    padding: 5px;
-    margin: 0;
-}
-
-.salvation-value span {
-    font-size: 1.2em;
-    font-weight: bold;
-    min-width: 30px;
-    text-align: center;
-}
-
-.salvation-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}    
-    </style>
+    <meta charset="UTF-8">
+    <title>Wretched & Alone Gamepad</title>
+    <!-- MOVED: All styles are now in an external file -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <div class="fate-panel">
             <h2>Fate</h2>
-            
             <div class="section">
                 <h3>Roll 2d6</h3>
                 <div class="dice-container">
-                    <div class="die" id="die1">-</div>
-                    <div class="die" id="die2">-</div>
+                    <div class="die" id="die1">-<span class="die-label">d6</span></div>
+                    <div class="die" id="die2">-<span class="die-label">d6</span></div>
                 </div>
                 <button onclick="rollDice()">Roll Dice</button>
                 <div class="result" id="diceResult">Total: -</div>
             </div>
-
             <div class="section">
                 <h3>Draw Card</h3>
                 <button onclick="drawCard()">Draw Card</button>
@@ -258,50 +33,47 @@
                 </div>
                 <div class="card-history" id="cardHistory"></div>
             </div>
-
             <div class="section">
                 <h3>Tower Pull</h3>
                 <button onclick="towerPull()" id="pullButton">Pull Block</button>
-                <div class="result" id="towerResult" class="narrative-message">The tower stands steady, waiting for the first pull...</div>
-                <div class="dice-pool-info" id="dicePoolInfo"></div>
+                <div class="narrative-message" id="towerResult">The tower stands steady, waiting for the first pull...</div>
+                <div class="dice-pool-info" id="dicePoolStatus"></div>
+                <div class="dread-meter"><div class="dread-bar" id="dreadBar"></div></div>
+                <div class="dice-pool-info" id="dreadStatus"></div>
             </div>
-
             <div class="section">
-    <h3>Salvation (Ace of Hearts)</h3>
-    <p>This counter represents your tokens.</p>
-    <div class="salvation-controls">
-        <div class="salvation-value">
-            <button onclick="adjustSalvation(-1)">-</button>
-            <span id="salvationValue">10</span>
-            <button onclick="adjustSalvation(1)">+</button>
-        </div>
-        <div class="salvation-checkbox">
-            <input type="checkbox" id="countUp">
-            <label for="countUp">Count up?</label>
-        </div>
-    </div>
-    <div class="dice-container">
-        <div class="die" id="salvationDie">-</div>
-    </div>
-    <button onclick="rollSalvationDie()">Roll Die</button>
-    <div class="result" id="salvationResult">Ready to roll...</div>
-</div>
-    <p><small><i>Games, then, are a unique social technology. They are a method for inscribing forms of agency into artifactual vessels: for recording them, preserving them, and passing them around. And we possess a special ability; we can submerge ourselves in alternate agencies designed by another. In other words, we can use games to communicate forms of agency.</i><br> C Thi Nguyen <i>Games: Agency as Art</i> 2020: 1.</small></p>    
+                <h3>Salvation Tokens (Ace of Hearts)</h3>
+                <div class="salvation-controls">
+                    <div class="salvation-value">
+                        <button onclick="adjustSalvation(-1)">-</button>
+                        <span id="salvationValue">10</span>
+                        <button onclick="adjustSalvation(1)">+</button>
+                    </div>
+                    <div class="salvation-checkbox">
+                        <input type="checkbox" id="countUp">
+                        <label for="countUp">Count up?</label>
+                    </div>
+                </div>
+                <div class="dice-container">
+                    <div class="die" id="salvationDie">-<span class="die-label">d6</span></div>
+                </div>
+                <button onclick="rollSalvationDie()">Roll Die</button>
+                <div class="result" id="salvationResult">Ready to roll...</div>
+            </div>
         </div>
 
         <div class="journal-panel">
             <div class="instructions-panel">
+                <img src="VoWAHC.png" align="right">
                 <h2>Wretched & Alone Game Pad</h2>
                 <h3>by Shawn Graham</h3>
-                <div id="instructions">
-                    This site is meant to help you play solo journaling RPGs made using the <a href="https://sealedlibrary.itch.io/wretched-alone-srd">'Wretched & Alone'</a> system by Chris Bissette.
-                      <select id="gameSelector" onchange="openGameWindow()">
-        <option value="">Select a game...</option>
-        <option value="https://shawngraham.github.io/solo-rpg/Whoever%20Finds%20This%20Paper%20v1.0%20S%20Graham.pdf">Whoever Finds This Paper v1 by S Graham</option>
-        <option value="https://shawngraham.github.io/solo-rpg/The%20Cave%20v1.0%20Shawn%20Graham.pdf">The Cave v1 by S Graham</option>
-        <option value="https://shawngraham.github.io/solo-rpg/In%20The%20Forest%20Dark%20v1.0%20Shawn%20Graham.pdf">In The Forest Dark v1 by S Graham</option>
-        <option value="https://shawngraham.github.io/solo-rpg/Degrees%20of%20Difficulty%20v1.0%20by%20Shawn%20Graham.pdf">Degrees of Difficulty by S Graham</option>                  
-    </select> 
+                <p>
+                    This site helps you play solo journaling RPGs using the 
+                    <a href="https://sealedlibrary.itch.io/wretched-alone-srd" target="_blank">Wretched & Alone</a> system by Chris Bissette.
+                </p>
+                <div class="action-buttons">
+                    <button id="newGameButton" class="action-button" onclick="newGame()">New Game</button>
+                    <button id="helpButton" class="action-button" onclick="openModal('helpModal')">Help</button>
                 </div>
             </div>
             <h2>Journal</h2>
@@ -312,30 +84,125 @@
                 <button class="save-button" onclick="loadFile()">Load File</button>
             </div>
             <input type="file" id="fileInput" style="display: none;" onchange="handleFileLoad(event)">
+            
+            <div class="quote-box">
+                <p><small><i>Games, then, are a unique social technology. They are a method for inscribing forms of agency into artifactual vessels: for recording them, preserving them, and passing them around. And we possess a special ability; we can submerge ourselves in alternate agencies designed by another. In other words, we can use games to communicate forms of agency.</i><br> C Thi Nguyen <i>Games: Agency as Art</i> 2020: 1.</small></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameSelectModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Welcome, Survivor</h2>
+            <p>Please select a game to begin, or choose to bring your own rulebook.</p>
+            <div id="gameList"></div>
+            <hr style="margin: 20px 0;">
+            <button class="game-selection-button" style="background: #6c757d;" onclick="selectGame(null)">
+                Bring Your Own Game
+                <span class="author">Dismiss this and use your own ruleset.</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('helpModal')">&times;</button>
+            <h2>How to Play</h2>
+            <p>This gamepad provides the tools needed to play a "Wretched & Alone" system game.</p>
+            <ul>
+                <li><strong>Dice (2d6):</strong> Many games require you to roll two six-sided dice to answer prompts.</li>
+                <li><strong>Cards:</strong> Prompts are often tied to drawing a standard playing card. The suit and value determine the event. When the deck is empty, you reshuffle.</li>
+                <li><strong>Tower Pull:</strong> This is the core tension mechanic, simulating a Jenga tower.
+                    <ul>
+                        <li>The tower begins with 100 "Stability". Each pull, you roll a number of virtual dice equal to the current stability.</li>
+                        <li><strong>The risk escalates!</strong> As stability drops, the chance of losing more points per pull increases dramatically, making the endgame tense and dangerous.</li>
+                        <li>When stability reaches 0, the tower collapses, and the game ends.</li>
+                    </ul>
+                </li>
+                <li><strong>Salvation Tokens:</strong> This is a counter for games that use a token system, often tied to the Ace of Hearts.</li>
+                <li><strong>Journal:</strong> This is where you write your story. Your entries are auto-saved to your browser. Use the "Save to File" button to download a permanent copy.</li>
+                <li><strong>New Game:</strong> This button will completely erase your journal, card history, and tower state from the browser, allowing you to start fresh.</li>
+            </ul>
         </div>
     </div>
 
     <script>
-        function openGameWindow() {
-        const selector = document.getElementById('gameSelector');
-        const selectedValue = selector.value;
-        
-        if (selectedValue) {
-            window.open(selectedValue, '_blank');
-            selector.selectedIndex = 0; // Reset the selection
+        // --- MODAL CONTROLS ---
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('modal-visible');
         }
-    }
 
-        // Dice Rolling
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('modal-visible');
+        }
+
+        // --- NEW GAME AND ONBOARDING ---
+        function newGame() {
+            if (confirm('Are you sure you want to start a new game? This will erase all your current progress (journal, tower, etc.).')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        function selectGame(url) {
+            if (url) {
+                window.open(url, '_blank');
+            }
+            localStorage.setItem('gameInProgress', 'true');
+            closeModal('gameSelectModal');
+        }
+
+        async function fetchConfigAndShowModal() {
+            if (localStorage.getItem('gameInProgress')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('config.json');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                const gameListDiv = document.getElementById('gameList');
+                
+                data.games.forEach(game => {
+                    const button = document.createElement('button');
+                    button.className = 'game-selection-button';
+                    button.innerHTML = `${game.name} <span class="author">by ${game.author}</span>`;
+                    button.onclick = () => selectGame(game.url);
+                    gameListDiv.appendChild(button);
+                });
+            } catch (error) {
+                console.error("Could not load config.json:", error);
+            } finally {
+                openModal('gameSelectModal');
+            }
+        }
+
+        // --- DICE ROLLING ---
+        // MODIFIED for animation
         function rollDice() {
-            const die1 = Math.floor(Math.random() * 6) + 1;
-            const die2 = Math.floor(Math.random() * 6) + 1;
-            document.getElementById('die1').textContent = die1;
-            document.getElementById('die2').textContent = die2;
-            document.getElementById('diceResult').textContent = `Total: ${die1 + die2}`;
+            const die1El = document.getElementById('die1');
+            const die2El = document.getElementById('die2');
+            
+            // Add animation class
+            die1El.classList.add('rolling');
+            die2El.classList.add('rolling');
+            
+            // Wait for the animation to finish before showing the result
+            setTimeout(() => {
+                const die1 = Math.floor(Math.random() * 6) + 1;
+                const die2 = Math.floor(Math.random() * 6) + 1;
+                
+                die1El.firstChild.textContent = die1;
+                die2El.firstChild.textContent = die2;
+                document.getElementById('diceResult').textContent = `Total: ${die1 + die2}`;
+
+                // Remove animation class to allow re-rolling
+                die1El.classList.remove('rolling');
+                die2El.classList.remove('rolling');
+            }, 600); // Duration matches CSS animation
         }
 
-        // Card Drawing with History
+        // --- CARD DRAWING ---
         let deck = [];
         let cardHistory = [];
         const maxHistoryLength = 50;
@@ -363,24 +230,15 @@
             const card = deck.splice(randomIndex, 1)[0];
             const timestamp = new Date().toLocaleTimeString();
             
-            // Add to history
-            cardHistory.unshift({
-                card: card,
-                timestamp: timestamp,
-                remainingCards: deck.length
-            });
+            cardHistory.unshift({ card, timestamp, remainingCards: deck.length });
+            if (cardHistory.length > maxHistoryLength) cardHistory.pop();
             
-            // Limit history length
-            if (cardHistory.length > maxHistoryLength) {
-                cardHistory.pop();
-            }
-            
-            // Update display
-            document.getElementById('cardResult').textContent = card;
+            const cardResultElement = document.getElementById('cardResult');
+            cardResultElement.textContent = card;
+            cardResultElement.classList.toggle('red-card', card.includes('♥') || card.includes('♦'));
+
             updateDeckInfo();
             updateHistoryDisplay();
-            
-            // Save history to localStorage
             localStorage.setItem('cardHistory', JSON.stringify(cardHistory));
         }
 
@@ -388,35 +246,21 @@
             initializeDeck();
             document.getElementById('reshuffleButton').style.display = 'none';
             document.getElementById('cardResult').textContent = 'Deck reshuffled';
+            document.getElementById('cardResult').classList.remove('red-card');
             updateHistoryDisplay();
         }
 
         function updateDeckInfo() {
-            document.getElementById('remainingCards').textContent = 
-                `Remaining cards: ${deck.length}/52`;
+            document.getElementById('remainingCards').textContent = `Remaining cards: ${deck.length}/52`;
         }
 
         function updateHistoryDisplay() {
             const historyDiv = document.getElementById('cardHistory');
-            historyDiv.innerHTML = '';
-            
-            cardHistory.forEach(entry => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'card-history-item';
-                
-                // Check if card is red (hearts or diamonds)
+            historyDiv.innerHTML = cardHistory.map(entry => {
                 const isRed = entry.card.includes('♥') || entry.card.includes('♦');
-                const cardSpan = document.createElement('span');
-                cardSpan.textContent = entry.card;
-                if (isRed) cardSpan.className = 'red-card';
-                
-                const timeSpan = document.createElement('span');
-                timeSpan.textContent = entry.timestamp;
-                
-                historyItem.appendChild(cardSpan);
-                historyItem.appendChild(timeSpan);
-                historyDiv.appendChild(historyItem);
-            });
+                const cardSpan = `<span class="${isRed ? 'red-card' : ''}">${entry.card}</span>`;
+                return `<div class="card-history-item">${cardSpan}<span>${entry.timestamp}</span></div>`;
+            }).join('');
         }
 
         function clearHistory() {
@@ -425,54 +269,25 @@
             localStorage.setItem('cardHistory', JSON.stringify(cardHistory));
         }
 
-        // Jenga Simulation
-        const safeMessages = [
-            "The tower wobbles, but is ok",
-            "The tower shifts slightly as you pull out the block",
-            "The tower leans somewhat, but remains stable",
-            "A gentle sway, but the tower holds firm",
-            "The blocks settle into their new position",
-            "The tower adjusts to the change with minimal movement",
-            "A successful pull, the tower barely notices",
-            "Nothing much happens - for now",
-            "Phew, all is ok",
-            "It wobbles a bit, but settles",
-            "Easy peasy",
-            "Nicely done. The tower is structurally sound, still"
-        ];
-
-        const dangerMessages = [
-            "The tower is leaning quite dangerously",
-            "The tower sways as you touch it",
-            "The tower is in imminent danger of collapse",
-            "The structure groans under its own weight",
-            "The blocks shift precariously",
-            "Each movement threatens to bring it all down",
-            "The tower teeters on the edge of disaster",
-            "Your hands shake as you pull the block free",
-            "Your hand slipped, knocking some blocks askew. Careful!",
-            "Things are starting to get dangerous",
-            "Gently... gently dammit!",
-            "The blocks are barely carrying the weight",
-            "Watch out, things are getting dicey",
-            "Pull... careful, careful! The tower shifts as you pull",
-            "Hold your breath, anything could bring it down it seems"
-        ];
+        // --- JENGA TOWER SIMULATION ---
+        const safeMessages = ["The tower wobbles, but holds steady.", "The tower shifts slightly as you pull out the block.", "A gentle sway, but the tower holds firm.", "The blocks settle into their new position.", "A successful pull; the tower barely notices."];
+        const dangerMessages = ["The tower is leaning quite dangerously!", "The tower sways violently as you touch it.", "The structure groans under its own weight.", "The blocks shift precariously.", "Each movement threatens to bring it all down."];
+        const criticalMessages = ["A crack splinters through the tower's base!", "You feel the entire structure give way slightly as you pull.", "Dust rains down as the tower groans under immense pressure.", "The world seems to hold its breath; this could be the end.", "Every block feels like a vital organ; one wrong move..."];
 
         function getRandomMessage(array) {
             return array[Math.floor(Math.random() * array.length)];
         }
 
         let dicePool = 100;
+        let dreadMeter = 0;
+        const maxDread = 10;
 
-        function rollDicePool() {
-            let ones = 0;
-            for (let i = 0; i < dicePool; i++) {
-                if (Math.floor(Math.random() * 6) + 1 === 1) {
-                    ones++;
-                }
+        function rollDicePool(pool, failureThreshold) {
+            let failures = 0;
+            for (let i = 0; i < pool; i++) {
+                if (Math.floor(Math.random() * 6) + 1 <= failureThreshold) failures++;
             }
-            return ones;
+            return failures;
         }
 
         function getStabilityClass(remainingDice) {
@@ -481,184 +296,173 @@
             return 'stability-safe';
         }
 
-        function towerPull() {
-            if (dicePool <= 0) {
-                showGameEnd();
-                return;
-            }
+        function updateDreadDisplay() {
+            const dreadBar = document.getElementById('dreadBar');
+            const dreadPercent = (dreadMeter / maxDread) * 100;
+            dreadBar.style.width = `${dreadPercent}%`;
+            dreadBar.classList.toggle('high-dread', dreadMeter >= maxDread * 0.8);
+            
+            let dreadLevelText = 'Dread: None';
+            if (dreadMeter > 0 && dreadMeter <= maxDread * 0.5) dreadLevelText = `Dread: Low (${dreadMeter}/${maxDread})`;
+            else if (dreadMeter > maxDread * 0.5 && dreadMeter <= maxDread * 0.8) dreadLevelText = `Dread: Moderate (${dreadMeter}/${maxDread})`;
+            else if (dreadMeter > maxDread * 0.8) dreadLevelText = `Dread: High (${dreadMeter}/${maxDread})`;
+            document.getElementById('dreadStatus').textContent = dreadLevelText;
+        }
 
-            const removedDice = rollDicePool();
+        function towerPull() {
+            if (dicePool <= 0) return showGameEnd();
+
+            dreadMeter = Math.min(dreadMeter + (dicePool <= 30 ? 2 : 1), maxDread);
+            updateDreadDisplay();
+
+            let failureThreshold = 1, riskText = "Risk: Normal (1s remove dice)";
+            if (dicePool <= 20) { failureThreshold = 3; riskText = "Risk: CRITICAL"; } 
+            else if (dicePool <= 50) { failureThreshold = 2; riskText = "Risk: High"; }
+
+            const removedDice = rollDicePool(dicePool, failureThreshold);
             dicePool -= removedDice;
 
-            if (dicePool <= 0) {
-                showGameEnd();
-                return;
-            }
-
             const messageElement = document.getElementById('towerResult');
-            if (dicePool > 50) {
-                messageElement.className = 'narrative-message safe-message';
-                messageElement.textContent = getRandomMessage(safeMessages);
-            } else {
-                messageElement.className = 'narrative-message warning-message';
-                messageElement.textContent = getRandomMessage(dangerMessages);
-            }
-
-            const stabilityClass = getStabilityClass(dicePool);
-            document.getElementById('dicePoolInfo').innerHTML =
-                `<span class="${stabilityClass}">Stability Level: ${dicePool > 50 ? 'Stable' : 'Unstable'}</span>`;
-
-            localStorage.setItem('towerState', JSON.stringify({
-                dicePool: dicePool,
-                messageState: messageElement.textContent
-            }));
+            if (dicePool <= 0) return showGameEnd();
+            
+            let chosenMessage;
+            if (dicePool <= 20 || dreadMeter >= maxDread * 0.8) { messageElement.className = 'narrative-message warning-message'; chosenMessage = getRandomMessage(criticalMessages); } 
+            else if (dicePool <= 50 || dreadMeter >= maxDread * 0.5) { messageElement.className = 'narrative-message warning-message'; chosenMessage = getRandomMessage(dangerMessages); } 
+            else { messageElement.className = 'narrative-message safe-message'; chosenMessage = getRandomMessage(safeMessages); }
+            
+            messageElement.textContent = `${chosenMessage}`;// (${removedDice} stability lost.)`;
+            document.getElementById('dicePoolStatus').innerHTML = `<span class="${getStabilityClass(dicePool)}">Stability: ${dicePool} | ${riskText}</span>`;
+            
+            localStorage.setItem('towerState', JSON.stringify({ dicePool, dreadMeter, messageState: messageElement.textContent }));
         }
 
         function showGameEnd() {
-            document.getElementById('towerResult').innerHTML = 
-                '<div class="collapse-message">The tower groans one final time before cascading down in a thunderous crash! Game Over.</div>';
-            document.getElementById('dicePoolInfo').innerHTML = '';
+            const towerResultElement = document.getElementById('towerResult');
+            towerResultElement.className = 'collapse-message';
+            towerResultElement.innerHTML = 'The tower groans one final time before cascading down in a thunderous crash! Game Over.';
+            ['dicePoolStatus', 'dreadStatus'].forEach(id => document.getElementById(id).innerHTML = '');
+            document.getElementById('dreadBar').style.width = '100%';
+            document.getElementById('dreadBar').classList.add('high-dread');
             document.getElementById('pullButton').disabled = true;
             
-            const resetButton = document.createElement('button');
-            resetButton.onclick = resetTower;
-            resetButton.textContent = 'Build New Tower';
-            resetButton.style.marginTop = '20px';
-            document.getElementById('towerResult').appendChild(resetButton);
+            if (!document.getElementById('resetTowerButton')) {
+                const resetButton = document.createElement('button');
+                resetButton.onclick = resetTower;
+                resetButton.textContent = 'Build New Tower';
+                resetButton.id = 'resetTowerButton';
+                resetButton.style.marginTop = '20px';
+                towerResultElement.appendChild(resetButton);
+            }
         }
 
         function resetTower() {
             dicePool = 100;
-            document.getElementById('towerResult').className = 'narrative-message safe-message';
-            document.getElementById('towerResult').textContent = 'A fresh tower stands before you, solid and stable.';
-            document.getElementById('dicePoolInfo').innerHTML = 
-                `<span class="stability-safe">Stability Level: Stable</span>`;
+            dreadMeter = 0;
+            const towerResultElement = document.getElementById('towerResult');
+            towerResultElement.className = 'narrative-message safe-message';
+            towerResultElement.textContent = 'A fresh tower stands before you, solid and stable.';
+            document.getElementById('dicePoolStatus').innerHTML = `<span class="stability-safe">Stability: ${dicePool} | Risk: Normal</span>`;
             document.getElementById('pullButton').disabled = false;
-            
-            localStorage.setItem('towerState', JSON.stringify({
-                dicePool: dicePool,
-                messageState: 'A fresh tower stands before you, solid and stable.'
-            }));
+            document.getElementById('resetTowerButton')?.remove();
+            updateDreadDisplay();
+            localStorage.setItem('towerState', JSON.stringify({ dicePool, dreadMeter, messageState: towerResultElement.textContent }));
         }
 
-        // Journal Auto-save
+        // --- JOURNAL ---
         let saveTimeout;
-        
         function autoSave() {
             clearTimeout(saveTimeout);
             document.getElementById('saveIndicator').textContent = 'Saving...';
-            
             saveTimeout = setTimeout(() => {
-                const text = document.getElementById('journal').value;
-                localStorage.setItem('journalContent', text);
-                
-                const now = new Date().toLocaleTimeString();
-                document.getElementById('saveIndicator').textContent = `Last auto-saved at ${now}`;
+                localStorage.setItem('journalContent', document.getElementById('journal').value);
+                document.getElementById('saveIndicator').textContent = `Last auto-saved at ${new Date().toLocaleTimeString()}`;
             }, 1000);
         }
 
-        // Function to download journal as a file
         function downloadJournal() {
             const text = document.getElementById('journal').value;
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
             const a = document.createElement('a');
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            a.href = url;
-            a.download = `rpg-journal-${timestamp}.txt`;
-            document.body.appendChild(a);
+            a.href = URL.createObjectURL(blob);
+            a.download = `rpg-journal-${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            URL.revokeObjectURL(a.href);
         }
 
-        // Function to trigger file input
-        function loadFile() {
-            document.getElementById('fileInput').click();
-        }
-
-        // Function to handle file loading
+        function loadFile() { document.getElementById('fileInput').click(); }
         function handleFileLoad(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = e => {
                     document.getElementById('journal').value = e.target.result;
-                    autoSave(); // Save the loaded content to localStorage
+                    autoSave();
                 };
                 reader.readAsText(file);
             }
         }
 
-let salvationValue = 10;
-
-function adjustSalvation(amount) {
-    salvationValue += amount;
-    document.getElementById('salvationValue').textContent = salvationValue;
-    localStorage.setItem('salvationValue', salvationValue);
-}
-
-function rollSalvationDie() {
-    const dieResult = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('salvationDie').textContent = dieResult;
-    
-    const countUp = document.getElementById('countUp').checked;
-    const resultElement = document.getElementById('salvationResult');
-    
-    if (dieResult === 6) {
-        if (countUp) {
-            adjustSalvation(1);
-            resultElement.textContent = 'Rolled a 6! Chances of salvation increase';
-        } else {
-            adjustSalvation(-1);
-            resultElement.textContent = 'Rolled a 6! Chances of salvation increase';
+        // --- SALVATION TOKENS ---
+        let salvationValue = 10;
+        function adjustSalvation(amount) {
+            salvationValue += amount;
+            document.getElementById('salvationValue').textContent = salvationValue;
+            localStorage.setItem('salvationValue', salvationValue);
         }
-    } else {
-        resultElement.textContent = `Rolled a ${dieResult}. Your chances remain...unchanged.`;
-    }
-}
 
+        // MODIFIED for animation
+        function rollSalvationDie() {
+            const dieEl = document.getElementById('salvationDie');
+            dieEl.classList.add('rolling');
 
-        // Window load handler to restore state
+            setTimeout(() => {
+                const dieResult = Math.floor(Math.random() * 6) + 1;
+                dieEl.firstChild.textContent = dieResult;
+                const resultElement = document.getElementById('salvationResult');
+                if (dieResult === 6) {
+                    const amount = document.getElementById('countUp').checked ? 1 : -1;
+                    adjustSalvation(amount);
+                    resultElement.textContent = `Rolled a 6! Salvation tokens ${amount > 0 ? 'increase' : 'decrease'} by 1.`;
+                } else {
+                    resultElement.textContent = `Rolled a ${dieResult}. Your tokens remain unchanged.`;
+                }
+                dieEl.classList.remove('rolling');
+            }, 600);
+        }
+
+        // --- WINDOW ONLOAD (INITIALIZATION) ---
         window.onload = function() {
-            const savedTowerState = localStorage.getItem('towerState');
+            fetchConfigAndShowModal();
+
+            const savedTowerState = JSON.parse(localStorage.getItem('towerState'));
             if (savedTowerState) {
-                const state = JSON.parse(savedTowerState);
-                dicePool = state.dicePool;
-                if (dicePool <= 20) {
+                dicePool = savedTowerState.dicePool;
+                dreadMeter = savedTowerState.dreadMeter ?? 0;
+                if (dicePool <= 0) {
                     showGameEnd();
                 } else {
                     const messageElement = document.getElementById('towerResult');
-                    messageElement.textContent = state.messageState || 'The tower stands steady...';
+                    messageElement.textContent = savedTowerState.messageState || 'The tower stands steady...';
                     messageElement.className = `narrative-message ${dicePool > 50 ? 'safe-message' : 'warning-message'}`;
-                    const stabilityClass = getStabilityClass(dicePool);
-                    document.getElementById('dicePoolInfo').innerHTML =
-                        `<span class="${stabilityClass}">Stability Level: ${dicePool > 50 ? 'Stable' : 'Unstable'}</span>`;
+                    let riskText = "Risk: Normal";
+                    if (dicePool <= 20) riskText = "Risk: CRITICAL";
+                    else if (dicePool <= 50) riskText = "Risk: High";
+                    document.getElementById('dicePoolStatus').innerHTML = `<span class="${getStabilityClass(dicePool)}">Stability: ${dicePool} | ${riskText}</span>`;
                 }
+                updateDreadDisplay();
             } else {
                 resetTower();
             }
             
             initializeDeck();
 
-            const savedJournal = localStorage.getItem('journalContent');
-            if (savedJournal) {
-                document.getElementById('journal').value = savedJournal;
-            }
-
-            const savedCardHistory = localStorage.getItem('cardHistory');
-            if (savedCardHistory) {
-                cardHistory = JSON.parse(savedCardHistory);
-                updateHistoryDisplay();
-            }
-            const savedSalvationValue = localStorage.getItem('salvationValue');
-if (savedSalvationValue !== null) {
-    salvationValue = parseInt(savedSalvationValue);
-    document.getElementById('salvationValue').textContent = salvationValue;
-}
+            document.getElementById('journal').value = localStorage.getItem('journalContent') || '';
+            cardHistory = JSON.parse(localStorage.getItem('cardHistory')) || [];
+            updateHistoryDisplay();
+            
+            salvationValue = parseInt(localStorage.getItem('salvationValue') ?? 10);
+            document.getElementById('salvationValue').textContent = salvationValue;
         };
-
     </script>
 </body>
 </html>
