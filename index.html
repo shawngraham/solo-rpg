@@ -111,7 +111,7 @@
             <ul>
                 <li><strong>Dice (2d6):</strong> Many games require you to roll two six-sided dice to answer prompts.</li>
                 <li><strong>Cards:</strong> Prompts are often tied to drawing a standard playing card. The suit and value determine the event. When the deck is empty, you reshuffle.</li>
-                <li><strong>Tower Pull:</strong> This is the core tension mechanic, simulating a Jenga tower.
+                <li><strong>Mental State:</strong> This is the core tension mechanic, simulating a Jenga tower whose blocks are slowly pulled away.
                     <ul>
                         <li>The tower begins with 100 "Stability". Each pull, you roll a number of virtual dice equal to the current stability.</li>
                         <li><strong>The risk escalates!</strong> As stability drops, the chance of losing more points per pull increases dramatically, making the endgame tense and dangerous.</li>
@@ -426,7 +426,7 @@
             dreadMeter = 0;
             const towerResultElement = document.getElementById('towerResult');
             towerResultElement.className = 'narrative-message safe-message';
-            towerResultElement.textContent = 'A fresh tower stands before you, solid and stable.';
+            towerResultElement.textContent = 'Your mind, solid and stable. For now.';
             document.getElementById('dicePoolStatus').innerHTML = `<span class="stability-safe">Stability: ${dicePool} | Risk: Normal</span>`;
             document.getElementById('pullButton').disabled = false;
             document.getElementById('resetTowerButton')?.remove();
