@@ -380,7 +380,7 @@
             dreadMeter = Math.min(dreadMeter + (dicePool <= 30 ? 2 : 1), maxDread);
             updateDreadDisplay();
 
-            let failureThreshold = 1, riskText = "Risk: Normal (1s remove dice)";
+            let failureThreshold = 1, riskText = "Risk: Normal";
             if (dicePool <= 20) { failureThreshold = 3; riskText = "Risk: CRITICAL"; } 
             else if (dicePool <= 50) { failureThreshold = 2; riskText = "Risk: High"; }
 
@@ -404,7 +404,7 @@
         function showGameEnd() {
             const towerResultElement = document.getElementById('towerResult');
             towerResultElement.className = 'collapse-message';
-            towerResultElement.innerHTML = 'The tower groans one final time before cascading down in a thunderous crash! Game Over.';
+            towerResultElement.innerHTML = 'Alas! You have descended into gibbering madness. Game Over.';
             ['dicePoolStatus', 'dreadStatus'].forEach(id => document.getElementById(id).innerHTML = '');
             document.getElementById('dreadBar').style.width = '100%';
             document.getElementById('dreadBar').classList.add('high-dread');
