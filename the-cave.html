@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Cave - A Solo Journaling RPG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #2c2416 0%, #1a1410 100%);
+            color: #e8dcc4;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(101, 67, 33, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'IM Fell English', serif;
+            color: #d4af37;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            grid-column: 1 / -1;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            grid-column: 1;
+            font-style: italic;
+            font-size: 1.2em;
+            color: #b8936f;
+            margin-bottom: 30px;
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, #3a2f1f 0%, #2a1f14 100%);
+            border: 3px solid #8b6f47;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #d4af37 0%, #8b6f47 50%, #d4af37 100%);
+            border-radius: 12px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .controls-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .controls-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .controls-panel::-webkit-scrollbar-track {
+            background: #2a1f14;
+            border-radius: 4px;
+        }
+        
+        .controls-panel::-webkit-scrollbar-thumb {
+            background: #8b6f47;
+            border-radius: 4px;
+        }
+        
+        .section {
+            background: rgba(42, 31, 20, 0.6);
+            border: 1px solid #5a4a3a;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        
+        .section h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            color: #d4af37;
+            border-bottom: 1px solid #5a4a3a;
+            padding-bottom: 8px;
+        }
+        
+        .character-intro {
+            grid-column: 2;
+            background: linear-gradient(135deg, #3a2818 0%, #2a1810 100%);
+            border: 3px solid #8b6f47;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            line-height: 1.8;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+        }
+        
+        .character-intro h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .character-intro .date {
+            text-align: right;
+            font-style: italic;
+            color: #b8936f;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #8b6f47 0%, #6b5437 100%);
+            color: #e8dcc4;
+            border: 2px solid #d4af37;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Crimson Text', serif;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        button:hover {
+            background: linear-gradient(135deg, #9b7f57 0%, #7b6447 100%);
+            border-color: #f4bf47;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .dice-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        .die {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f5e6d3 0%, #e8dcc4 100%);
+            border: 3px solid #8b6f47;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #2a1f14;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.3);
+            position: relative;
+            transition: transform 0.6s ease;
+        }
+        
+        .die.rolling {
+            animation: diceRoll 0.6s ease-in-out;
+        }
+        
+        @keyframes diceRoll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(0.9); }
+            75% { transform: rotate(270deg) scale(1.1); }
+        }
+        
+        .die-label {
+            position: absolute;
+            bottom: 5px;
+            font-size: 12px;
+            color: #6b5437;
+            font-weight: normal;
+        }
+        
+        .result {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid #8b6f47;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .card-display {
+            background: linear-gradient(135deg, #2a1810 0%, #1a0f08 100%);
+            border: 2px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);
+        }
+        
+        .card-display .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .card-display .card-suit {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #b8936f;
+        }
+        
+        .suit-spades { color: #4a4a4a; }
+        .suit-hearts { color: #c41e3a; }
+        .suit-diamonds { color: #0066cc; }
+        .suit-clubs { color: #006400; }
+        
+        .token-counter {
+            background: linear-gradient(135deg, #d4af37 0%, #b8936f 100%);
+            border: 3px solid #8b6f47;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.5em;
+            color: #2a1f14;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+        
+        .token-counter .value {
+            font-size: 2.5em;
+            display: block;
+            margin: 10px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stability-meter {
+            background: rgba(42, 31, 20, 0.6);
+            border: 2px solid #8b6f47;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .stability-bar-container {
+            background: #2a1f14;
+            height: 30px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #5a4a3a;
+            margin-top: 10px;
+        }
+        
+        .stability-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4ade80 0%, #22c55e 50%, #16a34a 100%);
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .stability-bar.warning {
+            background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+        }
+        
+        .stability-bar.critical {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+        }
+        
+        .cards-drawn-area {
+            background: linear-gradient(135deg, #2a1f14 0%, #1a0f0a 100%);
+            border: 3px solid #8b6f47;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 150px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        
+        .cards-drawn-area.empty {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .drawn-card {
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b6f47;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+            position: relative;
+        }
+        
+        .drawn-card:hover:not(.resolved) {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 8px 16px rgba(212, 175, 55, 0.5);
+            border-color: #d4af37;
+        }
+        
+        .drawn-card.resolved {
+            opacity: 0.4;
+            cursor: default;
+            border-color: #5a4a3a;
+        }
+        
+        .drawn-card.active {
+            border: 4px solid #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+        }
+        
+        .drawn-card-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .drawn-card-suit {
+            font-size: 1.5em;
+        }
+        
+        .drawn-card.red-card .drawn-card-value,
+        .drawn-card.red-card .drawn-card-suit {
+            color: #d32f2f;
+        }
+        
+        .drawn-card.black-card .drawn-card-value,
+        .drawn-card.black-card .drawn-card-suit {
+            color: #2a1f14;
+        }
+        
+        .drawn-card-resolved-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #4a7c59;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .empty-cards-message {
+            color: #b8936f;
+            font-style: italic;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .main-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .card-prompt {
+            background: linear-gradient(135deg, #3a2818 0%, #2a1810 100%);
+            border: 2px solid #8b6f47;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .card-prompt.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card-prompt h4 {
+            color: #d4af37;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-family: 'IM Fell English', serif;
+        }
+        
+        .card-prompt p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .choice-btn {
+            background: linear-gradient(135deg, #5a4a3a 0%, #4a3a2a 100%);
+            border: 2px solid #8b6f47;
+            padding: 15px;
+            text-align: left;
+            font-size: 1em;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        .choice-btn:hover {
+            background: linear-gradient(135deg, #6a5a4a 0%, #5a4a3a 100%);
+            border-color: #d4af37;
+            padding-left: 20px;
+        }
+        
+        .journal-section {
+            background: linear-gradient(135deg, #e8dcc4 0%, #d4c4a8 100%);
+            border: 3px solid #8b6f47;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        
+        .journal-section h2 {
+            color: #2a1f14;
+            margin-bottom: 15px;
+        }
+        
+        #journal {
+            width: 100%;
+            min-height: 500px;
+            background: linear-gradient(135deg, #faf8f3 0%, #f5f0e8 100%);
+            border: 2px solid #8b6f47;
+            border-radius: 6px;
+            padding: 20px;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1em;
+            color: #2a1f14;
+            resize: vertical;
+            line-height: 1.8;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        #journal::placeholder {
+            color: #8b7355;
+            font-style: italic;
+        }
+        
+        .save-indicator {
+            text-align: right;
+            font-size: 0.9em;
+            color: #6b5437;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .save-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .card-history {
+            background: rgba(42, 31, 20, 0.6);
+            border: 1px solid #5a4a3a;
+            border-radius: 6px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .card-history::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .card-history::-webkit-scrollbar-track {
+            background: #2a1f14;
+        }
+        
+        .card-history::-webkit-scrollbar-thumb {
+            background: #8b6f47;
+            border-radius: 3px;
+        }
+        
+        .history-item {
+            padding: 6px;
+            border-bottom: 1px solid #3a2f1f;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #3a2f1f 0%, #2a1f14 100%);
+            border: 3px solid #d4af37;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        
+        .modal-content::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .modal-content::-webkit-scrollbar-track {
+            background: #2a1f14;
+            border-radius: 5px;
+        }
+        
+        .modal-content::-webkit-scrollbar-thumb {
+            background: #8b6f47;
+            border-radius: 5px;
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .modal-content p, .modal-content ul {
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .modal-content ul {
+            padding-left: 25px;
+        }
+        
+        .modal-content li {
+            margin-bottom: 10px;
+        }
+        
+        .modal-close {
+            float: right;
+            font-size: 2em;
+            line-height: 1;
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+        }
+        
+        #cardReferenceContent {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            #cardReferenceContent {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .suit-section {
+            background: rgba(42, 31, 20, 0.6);
+            border: 2px solid #8b6f47;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .suit-section h3 {
+            margin-bottom: 12px;
+            border-bottom: 1px solid #5a4a3a;
+            padding-bottom: 8px;
+        }
+        
+        .card-ref-item {
+            background: rgba(58, 47, 31, 0.4);
+            border: 1px solid #5a4a3a;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+        
+        .card-ref-item strong {
+            color: #d4af37;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .card-ref-item p {
+            margin: 0;
+            line-height: 1.5;
+            color: #c8b89f;
+        }
+        
+        .game-over {
+            background: linear-gradient(135deg, #4a1a1a 0%, #2a0a0a 100%);
+            border: 3px solid #c41e3a;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(196, 30, 58, 0.4);
+        }
+        
+        .game-over h3 {
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .game-won {
+            background: linear-gradient(135deg, #1a4a1a 0%, #0a2a0a 100%);
+            border: 3px solid #4ade80;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(74, 222, 128, 0.4);
+        }
+        
+        .game-won h3 {
+            color: #4ade80;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .deck-status {
+            text-align: center;
+            color: #b8936f;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .character-intro {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Cave</h1>
+        <div class="subtitle">A Solo Journaling RPG of Victorian Archaeological Discovery<Br> You are Dr. Blackwood, excavating a mysterious cave system in 1876. Record your findings, maintain scientific credibility, and wrestle with incresaingly disturbing discoveries that challenge everything you believe about history and humanity. Your journal must survive, even if you do not.<Br>The truth lies buried...but some things should stay that way.<br>A <a href="https://sealedlibrary.itch.io/wretched-alone-srd">Wretched & Alone</a>-style game.</div>
+        
+        <div class="character-intro">
+            <div class="date">April 20, 1889</div>
+            <p>The cave mouth gapes before you, dark and ancient. Your predecessors' careful methods seem laughably inadequate now. Something dwells in these layers of earth and bone - something that whispers through the artifacts, that moves in the shadows beyond your lamp's reach.</p>
+            <p>You are <strong>Dr. Elisabeth Blackwood</strong>, and you will document what lies beneath... no matter the cost to your reputation or sanity.</p>
+            <p>But the locals whisper of older things. And the bones... the bones tell a different story than the one in your scholarly papers.</p>
+            <p style="margin-top: 20px; font-style: italic; text-align: center;">Keep your site diary safe. It will vindicate your name.</p>
+        </div>
+        
+        <div class="panel controls-panel">
+            <div class="section">
+                <h3>📋 Getting Started</h3>
+                <p style="font-size: 0.95em; line-height: 1.6; color: #b8936f; margin-bottom: 10px;">
+                    Begin by writing your first journal entry. Then <strong>roll 1d6 to determine how many cards to draw</strong> for your first day's discoveries. Follow each card's prompt (resolving in any order) and record your findings.
+                </p>
+                <button onclick="showHelp()" style="background: linear-gradient(135deg, #4a5a8a 0%, #3a4a7a 100%);">❓ Full Rules & Help</button>
+            </div>
+            
+            <div class="section turn-section" style="background: rgba(139, 111, 71, 0.15); border: 2px solid #8b6f47;">
+                <h3 style="font-size: 1.3em;">🎲 START YOUR TURN</h3>
+                <p style="font-size: 0.9em; color: #b8936f; font-style: italic; margin-bottom: 10px;">
+                    Each turn, roll 1d6 to determine how many cards to draw for this day's discoveries.
+                </p>
+                <button onclick="rollForCardCount()">🎲 Roll 1d6 for Number of Cards</button>
+                <div id="cardCountResult" style="display: none; background: rgba(212, 175, 55, 0.2); border: 2px solid #d4af37; border-radius: 8px; padding: 15px; text-align: center; font-size: 1.3em; font-weight: bold; color: #d4af37; margin-top: 10px;">
+                    Draw <span id="cardsToDraw">0</span> cards this turn
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🎴 1. Draw Cards</h3>
+                <p style="font-size: 0.9em; color: #b8936f; font-style: italic; margin-bottom: 10px;">
+                    Draw the number of cards indicated above. You can resolve them in any order you choose.
+                </p>
+                <button onclick="drawCard()">🎴 Draw Next Event</button>
+                <div class="card-display" id="cardDisplay">
+                    <div style="color: #b8936f; font-style: italic;">Roll for card count first, then draw cards</div>
+                </div>
+                <div class="deck-status" id="deckStatus">52 cards remaining</div>
+                <button onclick="reshuffleDeck()" id="reshuffleBtn" style="display: none; margin-top: 10px;">Reshuffle Deck</button>
+                <div class="card-history" id="cardHistory"></div>
+                <button onclick="toggleCardReference()" id="cardRefBtn" style="margin-top: 10px; background: linear-gradient(135deg, #5a4a3a 0%, #4a3a2a 100%); font-size: 0.9em;">
+                    📖 View All Card Prompts
+                </button>
+            </div>
+            
+            <div class="section">
+                <h3>🎲 2. Roll Dice (When Prompted by Card)</h3>
+                <p style="font-size: 0.9em; color: #b8936f; font-style: italic; margin-bottom: 10px;">
+                    Some cards require dice rolls to resolve their prompts:
+                </p>
+                <div style="margin-bottom: 10px; font-size: 0.9em; color: #b8936f;">
+                    <strong>Roll 1d6:</strong> 1-3 = Negative, 4-6 = Positive<br>
+                    <strong>Roll 2d6 (Interpret):</strong> 2-5 = Disturbing, 6-8 = Ambiguous, 9-12 = Significant
+                </div>
+                <button onclick="rollOneDie()">Roll 1d6</button>
+                <button onclick="rollTwoDice()">Roll 2d6 (Interpret)</button>
+                <div class="dice-container" id="diceContainer"></div>
+                <div class="result" id="diceResult">Ready to roll when prompted</div>
+            </div>
+            
+            <div class="section">
+                <h3>🏛️ 3. Pull Block (When Prompted by Card)</h3>
+                <p style="font-size: 0.9em; color: #b8936f; font-style: italic; margin-bottom: 10px;">
+                    When a card prompts you to pull a block, your academic credibility is tested.
+                </p>
+                <div class="stability-meter">
+                    <div id="stabilityText">Your reputation stands firm - for now</div>
+                    <div class="stability-bar-container">
+                        <div class="stability-bar" id="stabilityBar" style="width: 100%;">100</div>
+                    </div>
+                </div>
+                <button onclick="pullBlock()" id="pullBtn" style="margin-top: 15px;">Pull Block</button>
+                <div style="font-size: 0.85em; color: #b8936f; margin-top: 10px; line-height: 1.5;">
+                    <strong>Risk increases as stability drops:</strong><br>
+                    • 51-100: Normal risk<br>
+                    • 21-50: High risk<br>
+                    • 1-20: CRITICAL risk<br>
+                    The tower may collapse at any moment!
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>⚔️ Evidence Tracker</h3>
+                <div class="token-counter">
+                    <div>Evidence Collected</div>
+                    <span class="value" id="tokenValue">0</span>
+                    <div style="font-size: 0.7em; margin-top: 5px;">Need 20 to publish your findings</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <button onclick="newGame()" style="background: linear-gradient(135deg, #8b4513 0%, #6b3513 100%);">🔄 Start New Excavation</button>
+            </div>
+        </div>
+        
+        <div class="main-panel">
+            <div class="section">
+                <h3>🎴 Cards This Turn</h3>
+                <p style="font-size: 0.9em; color: #b8936f; font-style: italic; margin-bottom: 10px;">
+                    Click any card to see its prompt and resolve it. Resolved cards are dimmed.
+                </p>
+                <div class="cards-drawn-area" id="cardsDrawnArea">
+                    <div class="empty-cards-message">No cards drawn yet. Roll 1d6 and draw cards to begin.</div>
+                </div>
+            </div>
+            
+            <div class="panel" id="promptPanel">
+                <div id="cardPrompt"></div>
+            </div>
+            
+            <div class="journal-section">
+                <h2>📖 Your Field Journal</h2>
+                <textarea id="journal" placeholder="Record your first entry here... What brought you to this cave? What do your academic rivals say about your theories? What did the old farmer tell you about the cave's history?"></textarea>
+                <div class="save-indicator" id="saveIndicator"></div>
+                <div class="save-buttons">
+                    <button onclick="saveJournal()">💾 Save Journal to File</button>
+                    <button onclick="loadJournal()">📂 Load Journal</button>
+                    <img src="https://shawngraham.github.io/solo-rpg/VoWAHC.png" height=50px>
+                </div>
+                <input type="file" id="fileInput" style="display: none;" accept=".txt" onchange="handleFileLoad(event)">
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeHelp()">&times;</button>
+            <h2>How to Play The Cave</h2>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">🎯 Your Goal</h3>
+            <p>As Dr. Elisabeth Blackwood, collect <strong>20 tokens</strong> (archaeological evidence) while maintaining your academic credibility (stability). Once you have 20 tokens, make one final block pull to attempt publication.</p>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">📖 Game Flow (Important!)</h3>
+            <ol style="line-height: 1.8;">
+                <li><strong>Roll 1d6</strong> to determine how many cards to draw this turn</li>
+                <li><strong>Draw that many cards</strong> - they appear visually above your journal</li>
+                <li><strong>Click any card to see its prompt</strong> - resolve cards in any order you choose</li>
+                <li>Each card may require:
+                    <ul style="margin-left: 20px; margin-top: 5px;">
+                        <li>Rolling 1d6 (for binary outcomes: 1-3 negative, 4-6 positive)</li>
+                        <li>Rolling 2d6 (to "Interpret" findings: 2-5 Disturbing, 6-8 Ambiguous, 9-12 Significant)</li>
+                        <li>Pulling blocks (risking your credibility)</li>
+                        <li>Making choices between options</li>
+                    </ul>
+                </li>
+                <li><strong>Mark cards as resolved</strong> when you're done with them (they'll be dimmed)</li>
+                <li><strong>Record your findings</strong> in your journal</li>
+                <li><strong>Repeat</strong> - start a new turn by rolling 1d6 again</li>
+            </ol>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">🏛️ The Tower Mechanic (Your Reputation)</h3>
+            <p style="line-height: 1.8;">Your academic credibility is represented by a tower that starts at 100 stability points. When you pull a block:</p>
+            <ul style="line-height: 1.8;">
+                <li>The game rolls a number of virtual dice <strong>equal to your current stability</strong></li>
+                <li>Each die that fails removes 1 stability point</li>
+                <li><strong>Risk escalates as stability drops:</strong>
+                    <ul style="margin-left: 20px;">
+                        <li>51-100: Normal risk (1 in 6 chance per die)</li>
+                        <li>21-50: High risk (2 in 6 chance per die)</li>
+                        <li>1-20: CRITICAL risk (3 in 6 chance per die)</li>
+                    </ul>
+                </li>
+                <li>When stability reaches 0, your reputation is ruined and the game ends</li>
+            </ul>
+            <p style="color: #d4af37; font-style: italic; margin-top: 10px;">This creates genuine tension - you never know when the tower will fall!</p>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">🎴 The Four Suits</h3>
+            <ul>
+                <li><strong>♠️ Spades - The Cave's Secrets:</strong> Discoveries and mysterious findings</li>
+                <li><strong>♥️ Hearts - Academic Relations:</strong> Peers, rivals, and professional challenges</li>
+                <li><strong>♦️ Diamonds - Resources and Methodology:</strong> Tools, techniques, and practical concerns</li>
+                <li><strong>♣️ Clubs - Mental Strain:</strong> Psychological pressure and reality questioning</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">🎮 Core Mechanics</h3>
+            <ul>
+                <li><strong>Drawing Cards:</strong> Each card represents an event or discovery</li>
+                <li><strong>Academic Credibility (Tower):</strong> Starts at 100. At 0, your reputation is ruined</li>
+                <li><strong>Evidence Tokens:</strong> Collect 20 to publish your findings</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">📝 Getting Started</h3>
+            <ol>
+                <li>Write your first journal entry describing your arrival at the cave</li>
+                <li>Click "Roll 1d6 for Number of Cards" to start your first turn</li>
+                <li>Draw the indicated number of cards - they'll appear visually above your journal</li>
+                <li><strong>Click any card</strong> to see its prompt and resolve it</li>
+                <li>Resolve each card (in any order), clicking "Done with This Card" when finished</li>
+                <li>Record your findings and reactions in your journal</li>
+                <li>Start a new turn by rolling 1d6 again</li>
+            </ol>
+            
+            <h3 style="margin-top: 20px; color: #d4af37;">🏁 Endings</h3>
+            <ul>
+                <li><strong>Victory:</strong> Reach 20 tokens and survive the final block pull</li>
+                <li><strong>Tower Falls:</strong> Credibility reaches 0 - academic disgrace</li>
+                <li><strong>Evidence Destroyed:</strong> All tokens lost - archaeological disaster</li>
+            </ul>
+            
+            <p style="margin-top: 20px; font-style: italic;">The game auto-saves your progress. Journal entries are saved automatically to your browser.</p>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="cardRefModal">
+        <div class="modal-content" style="max-width: 900px;">
+            <button class="modal-close" onclick="closeCardReference()">&times;</button>
+            <h2>Card Reference Guide</h2>
+            <p style="margin-bottom: 20px; color: #b8936f;">Use this reference while writing your journal entries to understand what each card represents.</p>
+            
+            <div id="cardReferenceContent" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Game state
+        let tokens = 0;
+        let stability = 100;
+        let deck = [];
+        let cardHistory = [];
+        let gameEnded = false;
+        let currentChoiceContext = null;
+        let cardsToDraw = 0;  // Number of cards to draw this turn (from 1d6 roll)
+        let cardsDrawnThisTurn = 0;  // Number of cards already drawn this turn
+        let drawnCards = [];  // Array of cards drawn this turn with their state
+        let activeCardIndex = null;  // Which card is currently being viewed
+        
+        // Function to show choice/effect feedback in the prompt area
+        function showFeedback(message, needsDice = null) {
+            const promptPanel = document.getElementById('cardPrompt');
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'choice-feedback';
+            feedbackDiv.style.cssText = `
+                margin-top: 20px;
+                padding: 15px;
+                background: linear-gradient(135deg, #2a3a1a 0%, #1a2a0a 100%);
+                border: 2px solid #d4af37;
+                border-radius: 8px;
+            `;
+            
+            let html = `<p style="color: #4ade80; font-weight: bold; margin-bottom: 10px;">→ ${message}</p>`;
+            
+            if (needsDice) {
+                html += `<p style="color: #fbbf24; font-style: italic; margin-top: 10px;">
+                    ${needsDice.instruction}
+                </p>`;
+                if (needsDice.guide) {
+                    html += `<p style="color: #b8936f; font-size: 0.9em; margin-top: 5px;">
+                        ${needsDice.guide}
+                    </p>`;
+                }
+            } else {
+                html += `<p style="color: #b8936f; font-style: italic; margin-top: 10px;">
+                    Interpret this outcome and record your findings in your journal. Then draw another card to continue.
+                </p>`;
+            }
+            
+            feedbackDiv.innerHTML = html;
+            promptPanel.appendChild(feedbackDiv);
+        }
+        
+        // Card data with all prompts
+        const cardData = {
+            'spades': {
+                'A': {
+                    title: 'A Massive Chamber Discovered',
+                    description: 'You break through into a vast underground space, its ceiling lost in darkness. Ancient stalactites hang like chandeliers, and the floor is littered with artifacts.',
+                    effect: () => adjustTokens(2, 'Major discovery!')
+                },
+                'K': {
+                    title: 'Strange Markings on the Walls',
+                    description: 'The walls are covered in markings that seem to shift in your lamplight. Are they carved, painted, or something else entirely?',
+                    effect: () => {
+                        showDicePrompt(
+                            'Strange markings discovered',
+                            '⚄ Roll 2d6 to interpret their meaning',
+                            'Interpret: 2-5 = Disturbing/Unexplainable, 6-8 = Ambiguous/Debatable, 9-12 = Scientifically Significant'
+                        );
+                    }
+                },
+                'Q': {
+                    title: 'Unknown Civilization Artifacts',
+                    description: 'The artifacts you uncover don\'t match any known civilization. Their purpose and origin defy conventional classification.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Artifacts from an unknown civilization',
+                            '⚄ Roll 2d6 to interpret the artifacts in context of what you know',
+                            'Interpret: 2-5 = Disturbing/Unexplainable, 6-8 = Ambiguous/Debatable, 9-12 = Scientifically Significant'
+                        );
+                    }
+                },
+                'J': {
+                    title: 'Worker Disappears',
+                    description: 'One of your workers has vanished in a side tunnel. There are no signs of struggle, just... absence.',
+                    effect: () => {
+                        showDicePrompt(
+                            'A worker has disappeared in the tunnels',
+                            '⚄ Roll 1d6 to determine their fate',
+                            '1-3 = Negative outcome (found later, traumatized), 4-6 = Positive outcome (returns shaken but safe)'
+                        );
+                    }
+                },
+                '10': {
+                    title: 'Peculiar Stratification',
+                    description: 'This chamber reveals geological layers unlike anything in your training. The strata seem... wrong.',
+                    choices: [
+                        { text: 'Document methodically', effect: () => adjustTokens(1, 'Careful documentation adds evidence') },
+                        { text: 'Collect samples immediately in excitement', effect: () => { 
+                            adjustTokens(-2, 'Unstable conditions damage evidence'); 
+                            pullBlockWithFeedback('Your hasty methods undermine your credibility');
+                        }},
+                        { text: 'Attempt detailed sketches', effect: () => {
+                            showDicePrompt(
+                                'You attempt detailed sketches of the peculiar strata',
+                                '⚄ Roll 2d6 for success',
+                                '8+ = Gain 2 tokens (excellent sketches), 7 or less = No benefit'
+                            );
+                        }}
+                    ]
+                },
+                '9': {
+                    title: 'Prior Excavation Revealed',
+                    description: 'The cave floor suddenly drops away, revealing older excavation attempts. Someone was here before you.',
+                    choices: [
+                        { text: 'Clamber down immediately', effect: () => adjustTokens(-1, 'Accident damages evidence') },
+                        { text: 'Hide this evidence of prior research', effect: () => pullBlockWithFeedback('Concealing evidence damages your integrity') },
+                        { text: 'Lower yourself down with precautions', effect: () => {
+                            showDicePrompt(
+                                'You carefully lower yourself into the earlier excavation',
+                                '⚄ Roll 2d6',
+                                '10+ = Find predecessor\'s notes (gain 2 tokens), Less than 10 = Suffer injury, discover nothing'
+                            );
+                        }}
+                    ]
+                },
+                '8': {
+                    title: 'Unclassifiable Burial',
+                    description: 'Workers uncover a burial that defies Victorian classification systems. The positioning, grave goods, and preservation are all... unusual.',
+                    choices: [
+                        { text: 'Follow standard procedures', effect: () => adjustTokens(-2, 'Standard methods prove inadequate') },
+                        { text: 'Rush documentation', effect: () => { 
+                            pullBlockWithFeedback('Rushed work damages your reputation');
+                            pullBlockWithFeedback('Serious errors in methodology');
+                        }},
+                        { text: 'Attempt new classification system', effect: () => {
+                            showDicePrompt(
+                                'You develop a novel classification approach',
+                                '⚄ Roll 2d6',
+                                '7+ = Gain academic insight (2 tokens), Less than 7 = No breakthrough'
+                            );
+                        }}
+                    ]
+                },
+                '7': {
+                    title: 'Strange Acoustic Properties',
+                    description: 'A new passage has acoustic properties that make measurements impossible. Sounds echo strangely, and your compass spins wildly.',
+                    choices: [
+                        { text: 'Continue despite interference', effect: () => adjustTokens(-1, 'Trembling hands cause errors') },
+                        { text: 'Abandon survey in fear', effect: () => pullBlockWithFeedback('Abandoning work undermines your professional standing') }
+                    ]
+                },
+                '6': {
+                    title: 'Organic Material in Stone',
+                    description: 'Stalagmite formations contain inexplicable organic material. It shouldn\'t be possible.',
+                    effect: () => {
+                        showDicePrompt(
+                            'The impossible organic material in stone confronts you',
+                            '⚄ Roll 1d6 to determine your approach',
+                            '1-3 = Sample extensively (then roll 2d6: 4 or less = lose 2 tokens), 4-6 = Ignore anomaly (pull 1 block)'
+                        );
+                    }
+                },
+                '5': {
+                    title: 'Tools of Unknown Origin',
+                    description: 'Workers discover tools that match no known culture or period. Their construction defies explanation.',
+                    choices: [
+                        { text: 'Document conventionally', effect: () => { 
+                            pullBlockWithFeedback('Colleagues express disbelief at your findings');
+                            pullBlockWithFeedback('Your credibility is questioned');
+                        }},
+                        { text: 'Create new typology', effect: () => adjustTokens(-2, 'Speculation and error damage credibility') },
+                        { text: 'Hide the evidence', effect: () => {
+                            showDicePrompt(
+                                'You attempt to conceal these troubling findings',
+                                '⚄ Roll 2d6',
+                                '8+ = Successfully hidden, Less than 8 = Discovery damages reputation (pull 1 block)'
+                            );
+                        }}
+                    ]
+                },
+                '4': {
+                    title: 'Impossible Cave Paintings',
+                    description: 'Paintings emerge when exposed to torchlight but fade under lantern light. You question your own observations.',
+                    choices: [
+                        { text: 'Attempt photography', effect: () => adjustTokens(-2, 'Equipment fails mysteriously') },
+                        { text: 'Question your observations', effect: () => pullBlockWithFeedback('Self-doubt erodes your confidence') },
+                        { text: 'Sketch quickly', effect: () => {
+                            showDicePrompt(
+                                'You frantically sketch the ephemeral images',
+                                '⚄ Roll 2d6',
+                                '7+ = Evidence preserved, Less than 7 = The images fade before you can capture them'
+                            );
+                        }}
+                    ]
+                },
+                '3': {
+                    title: 'Perfect Stone Cube',
+                    description: 'A perfect cube of unknown stone is embedded in the wall. Its angles are precise beyond any natural formation.',
+                    choices: [
+                        { text: 'Leave in situ', effect: () => adjustTokens(-1, 'Maintain context but lose specimen') },
+                        { text: 'Extract carefully-ish (exciting!)', effect: () => pullBlockWithFeedback('Excitement leads to careless extraction') },
+                        { text: 'Document position thoroughly', effect: () => {
+                            showDicePrompt(
+                                'You meticulously document the cube\'s position and properties',
+                                '⚄ Roll 2d6',
+                                '9+ = Significant discovery documented (gain 1 token), Less than 9 = Adequate documentation only'
+                            );
+                        }}
+                    ]
+                },
+                '2': {
+                    title: 'Predecessor\'s Warning',
+                    description: 'You find a previous excavator\'s journal. The final entry reads: "Do not proceed. Some knowledge demands too high a price."',
+                    choices: [
+                        { text: 'Heed the warning', effect: () => pullBlockWithFeedback('Caution wars with ambition') },
+                        { text: 'Dismiss as hysteria', effect: () => adjustTokens(-1, 'But doubt creeps in...') }
+                    ]
+                }
+            },
+            'hearts': {
+                'A': {
+                    title: 'Letter from the Royal Society',
+                    description: 'A letter arrives expressing "grave concerns" about your methodology and findings. They demand clarification.',
+                    effect: () => { 
+                        pullBlockWithFeedback('The Royal Society\'s letter undermines your standing');
+                        pullBlockWithFeedback('Professional criticism mounts');
+                    }
+                },
+                'K': {
+                    title: 'Prestigious Lecture Invitation',
+                    description: 'You\'re invited to present preliminary findings at the Geological Society. This could make or break your career.',
+                    effect: () => {
+                        showDicePrompt(
+                            'The Geological Society awaits your response',
+                            '⚄ Roll 1d6 for your decision',
+                            '1-3 = Decline in fear (pull 1 block), 4-6 = Accept the challenge (gain 1 token)'
+                        );
+                    }
+                },
+                'Q': {
+                    title: 'Peer Review Crisis',
+                    description: 'A senior colleague writes expressing concern for your "mental state" based on your recent correspondence.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Your mental state is being questioned by peers',
+                            '⚄ Roll 1d6 to determine how you respond',
+                            '1-3 = Negative response (further concern), 4-6 = Positive response (concerns alleviated)'
+                        );
+                    }
+                },
+                'J': {
+                    title: 'Former Mentor\'s Disappointment',
+                    description: 'Your old mentor writes, disappointed in your "abandonment of proper scientific method."',
+                    effect: () => pullBlockWithFeedback('Your mentor\'s disappointment weighs heavily')
+                },
+                '10': {
+                    title: 'Museum Curator\'s Skepticism',
+                    description: 'The museum curator questions the authenticity of your finds, suggesting they might be recent forgeries.',
+                    choices: [
+                        { text: 'Provide additional documentation', effect: () => adjustTokens(-1, 'Extensive documentation required') },
+                        { text: 'Defend finds passionately', effect: () => { 
+                            pullBlockWithFeedback('Passionate defense seen as defensive');
+                            pullBlockWithFeedback('Your reaction damages credibility');
+                        }},
+                        { text: 'Arrange independent verification', effect: () => {
+                            showDicePrompt(
+                                'You seek independent verification of your findings',
+                                '⚄ Roll 2d6',
+                                '9+ = Verification supports your claims (gain 2 tokens), Less than 9 = Verification inconclusive (pull 1 block)'
+                            );
+                        }}
+                    ]
+                },
+                '9': {
+                    title: 'Academic Gossip',
+                    description: 'Rumors circulate that you\'ve "gone native" and lost scientific objectivity.',
+                    choices: [
+                        { text: 'Ignore gossip', effect: () => pullBlockWithFeedback('Gossip spreads unchecked') },
+                        { text: 'Counter with publications', effect: () => adjustTokens(-2, 'Time spent defending rather than excavating') }
+                    ]
+                },
+                '8': {
+                    title: 'Professional Isolation',
+                    description: 'Colleagues increasingly avoid your correspondence. Professional isolation deepens.',
+                    choices: [
+                        { text: 'Reach out more persistently', effect: () => { 
+                            pullBlockWithFeedback('Desperation shows');
+                            pullBlockWithFeedback('Peers grow more distant');
+                        }},
+                        { text: 'Focus solely on the dig', effect: () => adjustTokens(-1, 'Isolation affects judgment') }
+                    ]
+                },
+                '7': {
+                    title: 'Funding Committee Review',
+                    description: 'Your funding is under review. The committee questions whether resources are being properly utilized.',
+                    choices: [
+                        { text: 'Provide detailed accounting', effect: () => adjustTokens(-1, 'Time lost to bureaucracy') },
+                        { text: 'Argue for expedition\'s importance', effect: () => {
+                            showDicePrompt(
+                                'You make an impassioned case to the funding committee',
+                                '⚄ Roll 2d6',
+                                '7+ = Funding secured, Less than 7 = Committee cuts funding (pull 2 blocks)'
+                            );
+                        }}
+                    ]
+                },
+                '6': {
+                    title: 'Colleague\'s Competing Theory',
+                    description: 'A colleague publishes a competing theory that directly contradicts your preliminary findings.',
+                    choices: [
+                        { text: 'Maintain your position', effect: () => pullBlockWithFeedback('Academic conflict intensifies') },
+                        { text: 'Revise your categories', effect: () => adjustTokens(-2, 'Lost in self-doubt') }
+                    ]
+                },
+                '5': {
+                    title: 'Former Student\'s Concern',
+                    description: 'A former student writes expressing worry about the tone of your recent letters.',
+                    choices: [
+                        { text: 'Reassure them', effect: () => pullBlockWithFeedback('Your reassurances ring hollow') },
+                        { text: 'Share your findings', effect: () => adjustTokens(-1, 'They respond with troubling silence') }
+                    ]
+                },
+                '4': {
+                    title: 'Professional Journal Rejection',
+                    description: 'Your latest article is rejected. "Findings require substantial additional verification."',
+                    choices: [
+                        { text: 'Revise and resubmit', effect: () => adjustTokens(-2, 'Endless revisions') },
+                        { text: 'Seek alternative publications', effect: () => pullBlockWithFeedback('Desperate measures damage reputation') }
+                    ]
+                },
+                '3': {
+                    title: 'Geological Society Disputes Your Theory',
+                    description: 'The Geological Society publicly disputes your cave formation theory.',
+                    choices: [
+                        { text: 'Challenge critics directly', effect: () => { 
+                            pullBlockWithFeedback('Public confrontation backfires');
+                            pullBlockWithFeedback('Society members turn against you');
+                        }},
+                        { text: 'Modify claims diplomatically', effect: () => adjustTokens(-1, 'Compromising the truth') },
+                        { text: 'Present new evidence', effect: () => {
+                            showDicePrompt(
+                                'You present new evidence to the Geological Society',
+                                '⚄ Roll 2d6',
+                                '8+ = Evidence supports theory (gain 2 tokens), Less than 8 = Public humiliation (pull 2 blocks)'
+                            );
+                        }}
+                    ]
+                },
+                '2': {
+                    title: 'Rival Archaeologist Arrives',
+                    description: 'A rival archaeologist arrives unannounced at your dig site, clearly hoping to steal credit for discoveries.',
+                    choices: [
+                        { text: 'Restrict access to findings', effect: () => pullBlockWithFeedback('Secrecy breeds suspicion') },
+                        { text: 'Share findings openly', effect: () => {
+                            showDicePrompt(
+                                'You share your discoveries with your rival',
+                                '⚄ Roll 2d6',
+                                '5 or less = They claim credit for your work (lose 2 tokens), 6+ = Professional courtesy maintained'
+                            );
+                        }},
+                        { text: 'Collaborate cautiously', effect: () => adjustTokens(-1, 'Shared credit, but gained ally') }
+                    ]
+                }
+            },
+            'diamonds': {
+                'A': {
+                    title: 'Supplies Running Low',
+                    description: 'Your supplies are running dangerously low. A local worker suggests "traditional methods" of exploration.',
+                    effect: () => pullBlockWithFeedback('Desperation leads you to consider unorthodox approaches')
+                },
+                'K': {
+                    title: 'Ancient Burial Discovery',
+                    description: 'An ancient burial is discovered. Do you follow proper procedure or push for quick results?',
+                    effect: () => {
+                        showDicePrompt(
+                            'An ancient burial demands your immediate decision',
+                            '⚄ Roll 1d6 to determine your approach',
+                            '1-3 = Rush for results (negative), 4-6 = Follow procedure (positive)'
+                        );
+                    }
+                },
+                'Q': {
+                    title: 'Tools Failing at Depth',
+                    description: 'Standard tools are failing at deeper levels. Unorthodox alternatives present themselves.',
+                    effect: () => pullBlockWithFeedback('Standard methodology fails in the depths')
+                },
+                'J': {
+                    title: 'Previous Explorer\'s Notes',
+                    description: 'You find a previous explorer\'s notes... along with their warnings about the cave.',
+                    effect: () => { 
+                        adjustTokens(1, 'Historical context gained'); 
+                        pullBlockWithFeedback('But the warnings are deeply troubling');
+                    }
+                },
+                '10': {
+                    title: 'Inconsistent Measurements',
+                    description: 'Standard measuring tools provide wildly inconsistent readings in certain chambers.',
+                    choices: [
+                        { text: 'Trust your instruments', effect: () => pullBlockWithFeedback('Reality seems to reject your measurements') },
+                        { text: 'Abandon measurements', effect: () => adjustTokens(-2, 'Lost scientific rigor') },
+                        { text: 'Devise new measurement method', effect: () => {
+                            showDicePrompt(
+                                'You attempt to devise a new measurement methodology',
+                                '⚄ Roll 2d6',
+                                '7+ = Innovative approach succeeds (gain 1 token), Less than 7 = New method fails'
+                            );
+                        }}
+                    ]
+                },
+                '9': {
+                    title: 'New Passage Requires Documentation',
+                    description: 'Workers discover a new passage requiring immediate documentation before it can be safely explored.',
+                    choices: [
+                        { text: 'Follow proper procedure', effect: () => showFeedback('Thorough documentation completed') },
+                        { text: 'Rush exploration eagerly', effect: () => adjustTokens(-1, 'Haste leads to mistakes') }
+                    ]
+                },
+                '8': {
+                    title: 'Preservation Failure',
+                    description: 'Unusual specimens resist all standard preservation techniques. They seem to deteriorate the moment they\'re removed from the cave.',
+                    choices: [
+                        { text: 'Use traditional methods', effect: () => adjustTokens(-1, 'Specimens lost') },
+                        { text: 'Risk experimental approach', effect: () => {
+                            showDicePrompt(
+                                'You attempt an experimental preservation technique',
+                                '⚄ Roll 2d6',
+                                '4 or less = Breakthrough! (gain 2 tokens), 5+ = Experiment destroys specimens (lose 2 tokens)'
+                            );
+                        }}
+                    ]
+                },
+                '7': {
+                    title: 'Local Folk Method',
+                    description: 'A local folk method proves more effective than your academic approach. Your workers watch your reaction carefully.',
+                    choices: [
+                        { text: 'Reject technique, affirm academic superiority', effect: () => showFeedback('Workers grow resentful of your dismissal') },
+                        { text: 'Adopt the method fully', effect: () => pullBlockWithFeedback('Abandoning academic rigor') },
+                        { text: 'Integrate carefully into methodology', effect: () => {
+                            showDicePrompt(
+                                'You attempt to integrate folk wisdom with academic method',
+                                '⚄ Roll 2d6',
+                                '11+ = Methodology breakthrough, Less than 11 = Integration fails (pull 1 block, lose 1 token)'
+                            );
+                        }}
+                    ]
+                },
+                '6': {
+                    title: 'Camera Malfunction',
+                    description: 'Your camera equipment malfunctions near certain artifacts. The exposures show only darkness, though your eyes see clearly.',
+                    choices: [
+                        { text: 'Rely on sketches instead', effect: () => showFeedback('You document through traditional illustration') },
+                        { text: 'Attempt repairs', effect: () => adjustTokens(-2, 'Delays while equipment is repaired') }
+                    ]
+                },
+                '5': {
+                    title: 'Unstable Chamber',
+                    description: 'Excavation reveals a potentially unstable chamber. It could collapse at any moment, but it also holds significant artifacts.',
+                    choices: [
+                        { text: 'Follow safety protocols', effect: () => showFeedback('Safety first. The chamber remains unexplored') },
+                        { text: 'Send workers in for quick study', effect: () => { 
+                            adjustTokens(-1, 'A worker is killed in the collapse!'); 
+                            pullBlockWithFeedback('The guilt weighs heavily. Your judgment is questioned');
+                        }}
+                    ]
+                },
+                '4': {
+                    title: 'Classification Systems Fail',
+                    description: 'Standard archaeological classification systems prove completely inadequate for what you\'re finding.',
+                    choices: [
+                        { text: 'Create entirely new system', effect: () => adjustTokens(-2, 'Confusion and academic resistance') },
+                        { text: 'Force finds into existing categories', effect: () => pullBlockWithFeedback('Scientific dishonesty damages your integrity') }
+                    ]
+                },
+                '3': {
+                    title: 'Artifacts Change After Removal',
+                    description: 'Artifacts demonstrably change appearance after removal from the cave site. You have witnesses, but no one will believe this.',
+                    choices: [
+                        { text: 'Document the changes meticulously', effect: () => adjustTokens(1, 'Strange but documented') },
+                        { text: 'Question your own observations', effect: () => pullBlockWithFeedback('Self-doubt erodes confidence') }
+                    ]
+                },
+                '2': {
+                    title: 'Workers Refuse Entry',
+                    description: 'Your workers refuse to enter a certain chamber. Their fear is palpable.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Your workers are terrified of a particular chamber',
+                            '⚄ Roll 1d6 to learn what they fear',
+                            '1-3 = They speak of "voices in the stone" and ancient warnings, 4-6 = They claim the air itself feels wrong, oppressive'
+                        );
+                    }
+                }
+            },
+            'clubs': {
+                'A': {
+                    title: 'The Bones Whisper',
+                    description: 'Late at night in your tent, you could swear the bones in your collection are whispering. You must be exhausted.',
+                    effect: () => { 
+                        pullBlockWithFeedback('The whispers haunt your dreams');
+                        pullBlockWithFeedback('Sleep-deprived, your work suffers');
+                    }
+                },
+                'K': {
+                    title: 'Unknown Scripts',
+                    description: 'You catch yourself writing field notes in unknown scripts. When you look again, they\'re in English. Weren\'t they?',
+                    effect: () => pullBlockWithFeedback('Your grasp on reality wavers')
+                },
+                'Q': {
+                    title: 'Memory of University Days',
+                    description: 'A vivid memory of your university days provides unexpected comfort... or does it heighten your doubts about how far you\'ve strayed?',
+                    effect: () => {
+                        showDicePrompt(
+                            'A memory from your past surfaces',
+                            '⚄ Roll 1d6',
+                            '1-3 = You remember your professor\'s warnings about losing objectivity, 4-6 = You remember why you chose this path: the pursuit of truth'
+                        );
+                    }
+                },
+                'J': {
+                    title: 'Worker\'s Madness',
+                    description: 'A worker goes mad, claiming the artifacts speak to them, showing them visions of impossible things.',
+                    effect: () => pullBlockWithFeedback('The worker\'s madness spreads fear through the camp')
+                },
+                '10': {
+                    title: 'Writing in Unknown Script',
+                    description: 'You find yourself writing field notes in a script you don\'t recognize. The symbols feel ancient, familiar.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Unknown symbols flow from your pen',
+                            '⚄ Roll 1d6 to understand what this means',
+                            '1-3 = Negative implication, 4-6 = Positive implication'
+                        );
+                    }
+                },
+                '9': {
+                    title: 'Time Becomes Unreliable',
+                    description: 'Measurements of time become unreliable within the cave. Your pocket watch contradicts the position of the sun.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Time itself seems distorted in the cave',
+                            '⚄ Roll 1d6 to determine how you cope',
+                            '1-3 = Negative coping mechanism, 4-6 = Positive adaptation'
+                        );
+                    }
+                },
+                '8': {
+                    title: 'Prophetic Dreams',
+                    description: 'Dreams of artifacts prove eerily prophetic of actual finds. You discover precisely what you dreamed, in the exact location.',
+                    choices: [
+                        { text: 'Ignore the correlation', effect: () => showFeedback('You refuse to acknowledge the impossible pattern') },
+                        { text: 'Study the pattern seriously', effect: () => {
+                            showDicePrompt(
+                                'You investigate the prophetic nature of your dreams',
+                                '⚄ Roll 2d6',
+                                '9+ = Profound insight gained (2 tokens), Less than 9 = Word leaks out about your "visions" (pull 1 block)'
+                            );
+                        }}
+                    ]
+                },
+                '7': {
+                    title: 'Journal Gaps',
+                    description: 'You find inexplicable gaps in your field journal. Entire days are missing, though you remember working.',
+                    choices: [
+                        { text: 'Your assistant questions your memory', effect: () => pullBlockWithFeedback('Even your assistant doubts your sanity') },
+                        { text: 'Fill gaps with theoretical reconstruction', effect: () => adjustTokens(-2, 'Speculation masquerading as observation') }
+                    ]
+                },
+                '6': {
+                    title: 'Artifacts Rearrange',
+                    description: 'Artifacts seem to rearrange themselves in storage overnight. Your workers notice too - you\'re not imagining it.',
+                    choices: [
+                        { text: 'Document the changes carefully', effect: () => { 
+                            adjustTokens(1, 'Evidence of the impossible'); 
+                            pullBlockWithFeedback('But who will believe you?');
+                        }},
+                        { text: 'Doubt your observations', effect: () => { 
+                            pullBlockWithFeedback('Self-doubt consumes you');
+                            pullBlockWithFeedback('Your confidence crumbles');
+                        }}
+                    ]
+                },
+                '5': {
+                    title: 'Voices from Sealed Chambers',
+                    description: 'Multiple workers independently report hearing voices from chambers you know are sealed and empty.',
+                    choices: [
+                        { text: 'Investigate the sounds seriously', effect: () => showFeedback('The investigation yields nothing... but the voices continue') },
+                        { text: 'Dismiss the reports', effect: () => showFeedback('Workers begin abandoning the site, one by one') }
+                    ]
+                },
+                '4': {
+                    title: 'Unknown Melodies',
+                    description: 'You find yourself humming unknown melodies near certain finds. The tunes feel ancient, wrong.',
+                    effect: () => {
+                        showDicePrompt(
+                            'Ancient melodies echo in your mind',
+                            '⚄ Roll 2d6 to interpret what these songs mean',
+                            'Interpret: 2-5 = Disturbing, 6-8 = Ambiguous, 9-12 = Significant understanding'
+                        );
+                    }
+                },
+                '3': {
+                    title: 'Invisible Details',
+                    description: 'Your sketches consistently include details not visible to others. Your assistant suggests you\'re "seeing things."',
+                    choices: [
+                        { text: 'Trust your vision', effect: () => adjustTokens(-2, 'Doubt from all quarters') },
+                        { text: 'Accept assistant\'s perception', effect: () => pullBlockWithFeedback('You question your own senses') }
+                    ]
+                },
+                '2': {
+                    title: 'Contradicting Measurements',
+                    description: 'Yesterday\'s measurements of a chamber contradict today\'s reality. The space has changed, or your mind has.',
+                    choices: [
+                        { text: 'Trust latest data', effect: () => { 
+                            pullBlockWithFeedback('But the discrepancy haunts you');
+                            pullBlockWithFeedback('Reality itself seems unstable');
+                        }},
+                        { text: 'Accept both measurements as valid', effect: () => adjustTokens(-1, 'Lost in confusion') },
+                        { text: 'Seek guidance from the Theosophical Society', effect: () => {
+                            showDicePrompt(
+                                'You turn to occult wisdom for answers',
+                                '⚄ Roll 2d6',
+                                '8+ = They provide unexpected insight (gain 2 tokens, but pull 2 blocks), Less than 8 = No helpful guidance'
+                            );
+                        }}
+                    ]
+                }
+            }
+        };
+        
+        // Initialize game
+        function initGame() {
+            initializeDeck();
+            loadGameState();
+            updateDisplay();
+        }
+        
+        function initializeDeck() {
+            const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
+            const values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ suit, value });
+                }
+            }
+            shuffleDeck();
+        }
+        
+        function shuffleDeck() {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+        
+        function reshuffleDeck() {
+            initializeDeck();
+            cardHistory = [];
+            updateDisplay();
+            addToJournal('\n--- Deck Reshuffled ---\n');
+            document.getElementById('reshuffleBtn').style.display = 'none';
+        }
+        
+        function rollForCardCount() {
+            const die = Math.floor(Math.random() * 6) + 1;
+            cardsToDraw = die;
+            cardsDrawnThisTurn = 0;
+            drawnCards = [];  // Clear cards from previous turn
+            activeCardIndex = null;
+            
+            document.getElementById('cardCountResult').style.display = 'block';
+            document.getElementById('cardsToDraw').textContent = die;
+            
+            updateCardsDrawnDisplay();
+            document.getElementById('cardPrompt').innerHTML = '<p style="color: #b8936f; font-style: italic;">Draw your cards, then click on any card to see its prompt.</p>';
+            
+            showFeedback(`🎲 You rolled a ${die}! Draw ${die} card${die > 1 ? 's' : ''} for this turn's discoveries. You can resolve them in any order you choose.`);
+            saveGameState();
+        }
+        
+        function drawCard() {
+            if (gameEnded) return;
+            
+            if (cardsToDraw === 0) {
+                showFeedback('⚠️ Roll 1d6 first to determine how many cards to draw this turn!');
+                return;
+            }
+            
+            if (cardsDrawnThisTurn >= cardsToDraw) {
+                showFeedback(`✓ You've drawn all ${cardsToDraw} cards for this turn. Start a new turn by rolling 1d6 again.`);
+                return;
+            }
+            
+            if (deck.length === 0) {
+                document.getElementById('reshuffleBtn').style.display = 'block';
+                return;
+            }
+            
+            const card = deck.pop();
+            cardHistory.push(card);
+            cardsDrawnThisTurn++;
+            
+            // Add card to drawn cards array
+            drawnCards.push({
+                card: card,
+                resolved: false
+            });
+            
+            updateDisplay();
+            updateCardsDrawnDisplay();
+            
+            if (cardsDrawnThisTurn >= cardsToDraw) {
+                showFeedback(`✓ Drew all ${cardsToDraw} cards! Click any card to see its prompt and resolve it in any order.`);
+            } else {
+                showFeedback(`Drew ${cardsDrawnThisTurn} of ${cardsToDraw} cards. Draw ${cardsToDraw - cardsDrawnThisTurn} more, then click cards to resolve.`);
+            }
+            
+            saveGameState();
+        }
+        
+        function updateCardsDrawnDisplay() {
+            const container = document.getElementById('cardsDrawnArea');
+            
+            if (drawnCards.length === 0) {
+                container.className = 'cards-drawn-area empty';
+                container.innerHTML = '<div class="empty-cards-message">No cards drawn yet. Roll 1d6 and draw cards to begin.</div>';
+                return;
+            }
+            
+            container.className = 'cards-drawn-area';
+            
+            const suitSymbols = {
+                'spades': '♠',
+                'hearts': '♥',
+                'diamonds': '♦',
+                'clubs': '♣'
+            };
+            
+            container.innerHTML = drawnCards.map((cardObj, index) => {
+                const card = cardObj.card;
+                const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
+                const colorClass = isRed ? 'red-card' : 'black-card';
+                const resolvedClass = cardObj.resolved ? 'resolved' : '';
+                const activeClass = activeCardIndex === index ? 'active' : '';
+                const resolvedBadge = cardObj.resolved ? '<div class="drawn-card-resolved-badge">✓</div>' : '';
+                
+                return `
+                    <div class="drawn-card ${colorClass} ${resolvedClass} ${activeClass}" onclick="viewCard(${index})">
+                        ${resolvedBadge}
+                        <div class="drawn-card-value">${card.value}</div>
+                        <div class="drawn-card-suit">${suitSymbols[card.suit]}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function viewCard(index) {
+            const cardObj = drawnCards[index];
+            if (!cardObj || cardObj.resolved) return;
+            
+            activeCardIndex = index;
+            updateCardsDrawnDisplay();
+            displayPrompt(cardObj.card, index);
+        }
+        
+        function markCardResolved(index) {
+            if (drawnCards[index]) {
+                drawnCards[index].resolved = true;
+                activeCardIndex = null;
+                updateCardsDrawnDisplay();
+                
+                const unresolvedCount = drawnCards.filter(c => !c.resolved).length;
+                if (unresolvedCount === 0) {
+                    showFeedback('✓ All cards resolved! Start a new turn by rolling 1d6.');
+                    document.getElementById('cardPrompt').innerHTML = '<p style="color: #d4af37; font-weight: bold;">All cards resolved! Roll 1d6 to start your next turn.</p>';
+                } else {
+                    showFeedback(`${unresolvedCount} card${unresolvedCount > 1 ? 's' : ''} remaining. Click any unresolved card to continue.`);
+                }
+                
+                saveGameState();
+            }
+        }
+        
+        function displayPrompt(card, cardIndex) {
+            const promptPanel = document.getElementById('cardPrompt');
+            const cardInfo = cardData[card.suit][card.value];
+            
+            const suitSymbols = {
+                'spades': '♠',
+                'hearts': '♥',
+                'diamonds': '♦',
+                'clubs': '♣'
+            };
+            
+            const suitNames = {
+                'spades': 'The Cave\'s Secrets',
+                'hearts': 'Academic Relations',
+                'diamonds': 'Resources and Methodology',
+                'clubs': 'Mental Strain'
+            };
+            
+            const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
+            const colorStyle = isRed ? 'color: #d32f2f;' : 'color: #e8dcc4;';
+            
+            if (!cardInfo) {
+                promptPanel.innerHTML = `
+                    <h3 style="${colorStyle}">${card.value}${suitSymbols[card.suit]} - ${suitNames[card.suit]}</h3>
+                    <p>No specific prompt defined.</p>
+                    <button onclick="markCardResolved(${cardIndex})" style="margin-top: 15px;">✓ Mark as Resolved</button>
+                `;
+                return;
+            }
+            
+            let html = `
+                <h3 style="${colorStyle}">${card.value}${suitSymbols[card.suit]} - ${cardInfo.title}</h3>
+                <p style="font-size: 1.1em; line-height: 1.6; margin: 15px 0;">${cardInfo.description}</p>
+            `;
+            
+            if (cardInfo.choices) {
+                html += '<div class="choices">';
+                cardInfo.choices.forEach((choice, index) => {
+                    html += `<button class="choice-btn" onclick="makeChoice(${index}, '${card.suit}', '${card.value}', ${cardIndex})">${choice.text}</button>`;
+                });
+                html += '</div>';
+                html += `<button onclick="markCardResolved(${cardIndex})" style="margin-top: 15px; background: linear-gradient(135deg, #4a7c59 0%, #3a6c49 100%);">✓ Done with This Card</button>`;
+            } else if (cardInfo.effect) {
+                html += `<button onclick="triggerEffect('${card.suit}', '${card.value}', ${cardIndex})">Continue</button>`;
+                html += `<button onclick="markCardResolved(${cardIndex})" style="margin-top: 10px; background: linear-gradient(135deg, #4a7c59 0%, #3a6c49 100%);">✓ Done with This Card</button>`;
+            } else {
+                html += `<button onclick="markCardResolved(${cardIndex})" style="margin-top: 15px;">✓ Mark as Resolved</button>`;
+            }
+            
+            promptPanel.innerHTML = html;
+        }
+        
+        function makeChoice(index, suit, value, cardIndex) {
+            const cardInfo = cardData[suit][value];
+            if (cardInfo.choices && cardInfo.choices[index]) {
+                const choice = cardInfo.choices[index];
+                currentChoiceContext = { suit, value, choiceIndex: index, choiceText: choice.text, cardIndex: cardIndex };
+                
+                // Clear previous feedback
+                const promptPanel = document.getElementById('cardPrompt');
+                const existingFeedback = promptPanel.querySelector('.choice-feedback');
+                if (existingFeedback) existingFeedback.remove();
+                
+                // Execute the choice effect and capture the feedback
+                choice.effect();
+            }
+        }
+        
+        function triggerEffect(suit, value, cardIndex) {
+            const cardInfo = cardData[suit][value];
+            if (cardInfo.effect) {
+                currentChoiceContext = { suit, value, cardIndex: cardIndex };
+                cardInfo.effect();
+            }
+        }
+        
+        function showChoice(choices) {
+            let html = '<div class="choices" style="margin-top: 15px;">';
+            choices.forEach((choice, index) => {
+                html += `<button class="choice-btn" onclick="(${choice.effect})()">${choice.text}</button>`;
+            });
+            html += '</div>';
+            document.getElementById('cardPrompt').innerHTML += html;
+        }
+        
+        function showDicePrompt(message, instruction = '', guide = '') {
+            showFeedback(message, {
+                instruction: instruction || '⚄ Roll dice to determine the outcome',
+                guide: guide
+            });
+        }
+        
+        function adjustTokens(amount, message = '') {
+            const previousTokens = tokens;
+            tokens += amount;
+            if (tokens < 0) tokens = 0;
+            updateDisplay();
+            
+            let feedback = '';
+            if (amount > 0) {
+                feedback = `✓ Gained ${amount} evidence token${amount !== 1 ? 's' : ''}`;
+            } else if (amount < 0) {
+                feedback = `✗ Lost ${Math.abs(amount)} evidence token${amount !== -1 ? 's' : ''}`;
+            }
+            if (message) feedback += `: ${message}`;
+            
+            if (feedback) showFeedback(feedback);
+            
+            if (tokens >= 20 && !gameEnded) {
+                showPublicationAttempt();
+            } else if (tokens === 0 && previousTokens > 0 && amount < 0) {
+                // Only trigger "evidence destroyed" if we had tokens and lost them all
+                endGameNoEvidence();
+            }
+            
+            saveGameState();
+        }
+        
+        function pullBlockWithFeedback(message = '') {
+            pullBlock();
+            const feedback = message || 'Your academic credibility is challenged. Pull a block.';
+            showFeedback(feedback);
+        }
+        
+        function pullBlock() {
+            if (gameEnded) return;
+            
+            // CRITICAL FIX: Roll dice equal to FULL stability, not capped at 10
+            // This creates the proper tension and impending dread as stability drops
+            const failureThreshold = stability <= 20 ? 3 : (stability <= 50 ? 2 : 1);
+            let loss = 0;
+            
+            // Roll one virtual die for each point of stability remaining
+            // As stability drops, the risk escalates dramatically
+            for (let i = 0; i < stability; i++) {
+                if (Math.floor(Math.random() * 6) + 1 <= failureThreshold) {
+                    loss++;
+                }
+            }
+            
+            // Always lose at least 1 stability, but could lose many more
+            loss = Math.max(loss, 1);
+            stability -= loss;
+            if (stability < 0) stability = 0;
+            
+            updateDisplay();
+            
+            const riskLevel = stability <= 20 ? 'CRITICAL' : (stability <= 50 ? 'HIGH' : 'Normal');
+            showFeedback(`⚠️ Block pulled! Lost ${loss} stability. Risk level: ${riskLevel}. Current stability: ${stability}`);
+            
+            if (stability === 0) {
+                endGameTowerFall();
+            }
+            
+            saveGameState();
+        }
+        
+        function rollOneDie() {
+            const die = Math.floor(Math.random() * 6) + 1;
+            const container = document.getElementById('diceContainer');
+            container.innerHTML = `<div class="die rolling">${die}<div class="die-label">d6</div></div>`;
+            
+            setTimeout(() => {
+                container.querySelector('.die').classList.remove('rolling');
+            }, 600);
+            
+            const result = die <= 3 ? 'Negative Outcome (1-3)' : 'Positive Outcome (4-6)';
+            document.getElementById('diceResult').textContent = `Rolled ${die}: ${result}`;
+            
+            return die;
+        }
+        
+        function rollTwoDice() {
+            const die1 = Math.floor(Math.random() * 6) + 1;
+            const die2 = Math.floor(Math.random() * 6) + 1;
+            const total = die1 + die2;
+            
+            const container = document.getElementById('diceContainer');
+            container.innerHTML = `
+                <div class="die rolling">${die1}<div class="die-label">d6</div></div>
+                <div class="die rolling">${die2}<div class="die-label">d6</div></div>
+            `;
+            
+            setTimeout(() => {
+                container.querySelectorAll('.die').forEach(d => d.classList.remove('rolling'));
+            }, 600);
+            
+            let interpretation;
+            if (total <= 5) interpretation = 'Disturbing/Unexplainable';
+            else if (total <= 8) interpretation = 'Ambiguous/Debatable';
+            else interpretation = 'Scientifically Significant';
+            
+            document.getElementById('diceResult').textContent = `Rolled ${die1} + ${die2} = ${total}: ${interpretation}`;
+            
+            return total;
+        }
+        
+        function updateDisplay() {
+            // Update tokens
+            document.getElementById('tokenValue').textContent = tokens;
+            
+            // Update stability
+            const stabilityBar = document.getElementById('stabilityBar');
+            const stabilityText = document.getElementById('stabilityText');
+            const percentage = (stability / 100) * 100;
+            
+            stabilityBar.style.width = percentage + '%';
+            stabilityBar.textContent = stability;
+            
+            stabilityBar.className = 'stability-bar';
+            if (stability <= 20) {
+                stabilityBar.classList.add('critical');
+                stabilityText.textContent = 'Your credibility is hanging by a thread!';
+            } else if (stability <= 50) {
+                stabilityBar.classList.add('warning');
+                stabilityText.textContent = 'Your reputation is seriously damaged';
+            } else {
+                stabilityText.textContent = 'Your reputation stands firm';
+            }
+            
+            // Update deck status
+            document.getElementById('deckStatus').textContent = `${deck.length} cards remaining`;
+            
+            // Update card history
+            const historyDiv = document.getElementById('cardHistory');
+            historyDiv.innerHTML = cardHistory.slice(-10).reverse().map(card => {
+                const symbols = {'spades': '♠️', 'hearts': '♥️', 'diamonds': '♦️', 'clubs': '♣️'};
+                return `<div class="history-item"><span>${card.value}${symbols[card.suit]}</span></div>`;
+            }).join('');
+        }
+        
+        function showPublicationAttempt() {
+            gameEnded = true;
+            const promptPanel = document.getElementById('cardPrompt');
+            promptPanel.innerHTML = `
+                <div class="game-won">
+                    <h3>🎊 Ready to Publish!</h3>
+                    <p>You've gathered sufficient evidence (20 tokens). Now comes the final test: publication.</p>
+                    <p>Many careers end at this stage. Make one final pull to attempt publication...</p>
+                    <button onclick="attemptPublication()">Make Final Block Pull</button>
+                </div>
+            `;
+        }
+        
+        function attemptPublication() {
+            pullBlock();
+            
+            setTimeout(() => {
+                if (stability > 0) {
+                    document.getElementById('cardPrompt').innerHTML = `
+                        <div class="game-won">
+                            <h3>🏆 TRIUMPHANT SUCCESS!</h3>
+                            <p>Your work survives peer review and publication. You revolutionize archaeology!</p>
+                            <p style="margin-top: 20px; font-style: italic; color: #4ade80;"><em>Write the opening for your public lecture at The Society's annual meeting in your journal.</em></p>
+                            <p style="margin-top: 15px;">Dr. Elisabeth Blackwood's name will echo through history.</p>
+                            <button onclick="newGame()" style="margin-top: 20px;">Begin Another Excavation</button>
+                        </div>
+                    `;
+                }
+                // If stability reached 0, endGameTowerFall() already handles it
+            }, 1000);
+        }
+        
+        function endGameTowerFall() {
+            gameEnded = true;
+            document.getElementById('pullBtn').disabled = true;
+            
+            const endings = [
+                {
+                    title: 'Retreat in Shame',
+                    text: 'Your academic reputation is ruined. You retreat to a cottage in the far country, spending your days cataloguing moss in a desperate attempt to retrieve some sort of standing. Write your justification in your diary.'
+                },
+                {
+                    title: 'Unpaid Assistant',
+                    text: 'Sir Reginald Watterly smiles with satisfaction as he deposits your paper in the wastebasket. You swallow your pride and become his unpaid assistant, laboring in obscurity. Write a letter asking if you can work for him.'
+                }
+            ];
+            
+            const ending = endings[Math.floor(Math.random() * endings.length)];
+            
+            document.getElementById('cardPrompt').innerHTML = `
+                <div class="game-over">
+                    <h3>💔 Academic Credibility Destroyed</h3>
+                    <h4 style="color: #ff6b6b; margin-top: 15px;">${ending.title}</h4>
+                    <p>${ending.text}</p>
+                    <p style="margin-top: 20px; font-style: italic; color: #fbbf24;"><em>Record your final thoughts in your journal...</em></p>
+                    <button onclick="newGame()" style="margin-top: 20px;">Begin Another Excavation</button>
+                </div>
+            `;
+        }
+        
+        function endGameNoEvidence() {
+            gameEnded = true;
+            document.getElementById('pullBtn').disabled = true;
+            
+            document.getElementById('cardPrompt').innerHTML = `
+                <div class="game-over">
+                    <h3>💔 All Evidence Destroyed</h3>
+                    <p>You have managed to destroy all the archaeological evidence. The cave has lost something of its mystery; it will never tell us about the past.</p>
+                    <p>You develop a reputation for carelessness that you cannot shake. Embittered, you take up a schoolmistress position in the local village.</p>
+                    <p style="margin-top: 20px; font-style: italic; color: #fbbf24;"><em>Write your last journal entry trying to justify what happened...</em></p>
+                    <button onclick="newGame()" style="margin-top: 20px;">Begin Another Excavation</button>
+                </div>
+            `;
+        }
+        
+        let saveTimeout;
+        function autoSaveJournal() {
+            clearTimeout(saveTimeout);
+            document.getElementById('saveIndicator').textContent = 'Saving...';
+            saveTimeout = setTimeout(() => {
+                saveGameState();
+                document.getElementById('saveIndicator').textContent = `Saved at ${new Date().toLocaleTimeString()}`;
+            }, 1000);
+        }
+        
+        function saveJournal() {
+            const text = document.getElementById('journal').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `cave-journal-${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+        
+        function loadJournal() {
+            document.getElementById('fileInput').click();
+        }
+        
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('journal').value = e.target.result;
+                    autoSaveJournal();
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function saveGameState() {
+            const state = {
+                tokens,
+                stability,
+                deck,
+                cardHistory,
+                journal: document.getElementById('journal').value,
+                gameEnded,
+                cardsToDraw,
+                cardsDrawnThisTurn,
+                drawnCards,
+                activeCardIndex
+            };
+            localStorage.setItem('caveGameState', JSON.stringify(state));
+        }
+        
+        function loadGameState() {
+            const saved = localStorage.getItem('caveGameState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                tokens = state.tokens || 0;
+                stability = state.stability || 100;
+                deck = state.deck || [];
+                cardHistory = state.cardHistory || [];
+                gameEnded = state.gameEnded || false;
+                cardsToDraw = state.cardsToDraw || 0;
+                cardsDrawnThisTurn = state.cardsDrawnThisTurn || 0;
+                drawnCards = state.drawnCards || [];
+                activeCardIndex = state.activeCardIndex || null;
+                document.getElementById('journal').value = state.journal || '';
+                
+                if (cardsToDraw > 0) {
+                    document.getElementById('cardCountResult').style.display = 'block';
+                    document.getElementById('cardsToDraw').textContent = cardsToDraw;
+                }
+                
+                updateCardsDrawnDisplay();
+                
+                if (deck.length === 0) {
+                    initializeDeck();
+                }
+                
+                if (gameEnded) {
+                    document.getElementById('pullBtn').disabled = true;
+                }
+            }
+        }
+        
+        function newGame() {
+            if (confirm('Start a new excavation? This will erase all current progress.')) {
+                localStorage.removeItem('caveGameState');
+                location.reload();
+            }
+        }
+        
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+        }
+        
+        function closeHelp() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+        
+        function toggleCardReference() {
+            const modal = document.getElementById('cardRefModal');
+            if (!modal.classList.contains('active')) {
+                populateCardReference();
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+        
+        function closeCardReference() {
+            document.getElementById('cardRefModal').classList.remove('active');
+        }
+        
+        function populateCardReference() {
+            const suitInfo = {
+                'spades': { symbol: '♠️', name: 'The Cave\'s Secrets', color: '#4a4a4a' },
+                'hearts': { symbol: '♥️', name: 'Academic Relations', color: '#c41e3a' },
+                'diamonds': { symbol: '♦️', name: 'Resources and Methodology', color: '#0066cc' },
+                'clubs': { symbol: '♣️', name: 'Mental Strain', color: '#006400' }
+            };
+            
+            const values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+            const container = document.getElementById('cardReferenceContent');
+            
+            let html = '';
+            
+            for (let suit in suitInfo) {
+                html += `<div class="suit-section">
+                    <h3 style="color: ${suitInfo[suit].color};">${suitInfo[suit].symbol} ${suitInfo[suit].name}</h3>`;
+                
+                for (let value of values) {
+                    if (cardData[suit][value]) {
+                        const card = cardData[suit][value];
+                        html += `<div class="card-ref-item">
+                            <strong>${value}${suitInfo[suit].symbol} - ${card.title}</strong>
+                            <p>${card.description}</p>
+                        </div>`;
+                    }
+                }
+                
+                html += `</div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // Initialize on load
+        window.onload = initGame;
+        
+        // Auto-save journal on input
+        document.getElementById('journal').addEventListener('input', autoSaveJournal);
+        
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
