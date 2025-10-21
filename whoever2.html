@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whoever Finds This Paper - A Solo Journaling RPG</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=IM+Fell+English:ital@0;1&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(135deg, #c5d8e1 0%, #8a9ba8 50%, #5d6d7e 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Ice/frost texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255,255,255,0.3) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(200,220,240,0.2) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(255,255,255,0.15) 0%, transparent 30%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header styling */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            padding: 30px;
+            border: 3px solid #5d6d7e;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(90deg, transparent 0px, rgba(0,0,0,0.03) 1px, transparent 2px, transparent 40px),
+                repeating-linear-gradient(0deg, transparent 0px, rgba(0,0,0,0.03) 1px, transparent 2px, transparent 40px);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        
+        h1 {
+            font-family: 'IM Fell English', serif;
+            font-size: 3em;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            font-size: 1.2em;
+            color: #5d6d7e;
+        }
+        
+        .byline {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #34495e;
+        }
+        
+        /* Tab navigation */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #5d6d7e;
+            padding-bottom: 5px;
+        }
+        
+        .tab-button {
+            background: linear-gradient(135deg, #d4d4d4 0%, #a8b8c4 100%);
+            color: #2c3e50;
+            border: 2px solid #5d6d7e;
+            border-bottom: none;
+            padding: 15px 30px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            bottom: -3px;
+        }
+        
+        .tab-button:hover {
+            background: linear-gradient(135deg, #e4e4e4 0%, #b8c8d4 100%);
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border-color: #5d6d7e;
+            bottom: -3px;
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Tab content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Story/Rules panel - styled like aged paper */
+        .story-panel {
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b7355;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        /* Aged paper texture */
+        .story-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(90deg, transparent 0px, rgba(139,115,85,0.03) 1px, transparent 2px, transparent 40px),
+                repeating-linear-gradient(0deg, transparent 0px, rgba(139,115,85,0.03) 1px, transparent 2px, transparent 40px);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        
+        .story-panel::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        .story-panel::-webkit-scrollbar-track {
+            background: #d4c4a8;
+            border-radius: 5px;
+        }
+        
+        .story-panel::-webkit-scrollbar-thumb {
+            background: #8b7355;
+            border-radius: 5px;
+        }
+        
+        .story-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .story-content h2 {
+            font-family: 'IM Fell English', serif;
+            font-size: 2em;
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #8b7355;
+            padding-bottom: 10px;
+        }
+        
+        .story-content h2:first-child {
+            margin-top: 0;
+        }
+        
+        .story-content h3 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5em;
+            color: #34495e;
+            margin-top: 25px;
+            margin-bottom: 12px;
+        }
+        
+        .story-content p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .story-content ul, .story-content ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        /* Game Panel Layout */
+        .game-panel {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+            align-items: start;
+        }
+        
+        .panel {
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b7355;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(90deg, transparent 0px, rgba(139,115,85,0.03) 1px, transparent 2px, transparent 40px),
+                repeating-linear-gradient(0deg, transparent 0px, rgba(139,115,85,0.03) 1px, transparent 2px, transparent 40px);
+            pointer-events: none;
+            border-radius: 12px;
+        }
+        
+        .controls-panel {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            padding-right: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .controls-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .controls-panel::-webkit-scrollbar-track {
+            background: #d4c4a8;
+            border-radius: 4px;
+        }
+        
+        .controls-panel::-webkit-scrollbar-thumb {
+            background: #8b7355;
+            border-radius: 4px;
+        }
+        
+        .section {
+            background: rgba(232, 220, 196, 0.5);
+            border: 2px solid #8b7355;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section h3 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #a89575;
+            padding-bottom: 8px;
+        }
+        
+        /* Character intro box */
+        .character-intro {
+            background: linear-gradient(135deg, #d4c4a8 0%, #c4b498 100%);
+            border: 3px solid #8b7355;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .character-intro h2 {
+            font-family: 'IM Fell English', serif;
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .character-intro .date {
+            text-align: right;
+            font-style: italic;
+            color: #5d6d7e;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        
+        .character-intro p {
+            line-height: 1.6;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        
+        /* Buttons */
+        button {
+            background: linear-gradient(135deg, #5d6d7e 0%, #4a5a6e 100%);
+            color: #f5f5dc;
+            border: 2px solid #3a4a5e;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Crimson Text', serif;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        button:hover:not(:disabled) {
+            background: linear-gradient(135deg, #6d7d8e 0%, #5a6a7e 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Resource displays */
+        .tokens-display {
+            background: linear-gradient(135deg, #e8dcc4 0%, #d4c4a8 100%);
+            border: 2px solid #8b7355;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tokens-display span:first-child {
+            display: block;
+            font-size: 0.9em;
+            color: #5d6d7e;
+            margin-bottom: 8px;
+        }
+        
+        .tokens-count {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stability-display {
+            margin-top: 10px;
+        }
+        
+        .stability-bar-container {
+            background: rgba(189, 195, 199, 0.3);
+            height: 30px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #8b7355;
+            margin-top: 10px;
+        }
+        
+        .stability-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60 0%, #229954 50%, #1e8449 100%);
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            font-size: 0.95em;
+        }
+        
+        .stability-bar.warning {
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 50%, #d35400 100%);
+        }
+        
+        .stability-bar.critical {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 50%, #a93226 100%);
+        }
+        
+        /* Dice styling */
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 10px;
+        }
+        
+        #eventDiceContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+            min-height: 80px;
+        }
+        
+        .die {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #2c3e50;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.6s ease;
+        }
+        
+        .die.rolling {
+            animation: diceRoll 0.6s ease-in-out;
+        }
+        
+        @keyframes diceRoll {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg) scale(1.1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            75% { transform: rotate(270deg) scale(1.1); }
+        }
+        
+        /* Cards drawn area - NEW */
+        .cards-drawn-area {
+            background: linear-gradient(135deg, rgba(93, 109, 126, 0.1) 0%, rgba(74, 90, 110, 0.1) 100%);
+            border: 3px solid #8b7355;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 150px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-start;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .cards-drawn-area.empty {
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .drawn-card {
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b7355;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        .drawn-card:hover:not(.resolved) {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 8px 16px rgba(93, 109, 126, 0.5);
+            border-color: #5d6d7e;
+        }
+        
+        .drawn-card.resolved {
+            opacity: 0.4;
+            cursor: default;
+            border-color: #a89575;
+        }
+        
+        .drawn-card.active {
+            border: 4px solid #2980b9;
+            box-shadow: 0 0 20px rgba(41, 128, 185, 0.6);
+        }
+        
+        .drawn-card-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .drawn-card-suit {
+            font-size: 1.5em;
+        }
+        
+        .drawn-card.red-card .drawn-card-value,
+        .drawn-card.red-card .drawn-card-suit {
+            color: #c0392b;
+        }
+        
+        .drawn-card.black-card .drawn-card-value,
+        .drawn-card.black-card .drawn-card-suit {
+            color: #2c3e50;
+        }
+        
+        .drawn-card-resolved-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .empty-cards-message {
+            color: #5d6d7e;
+            font-style: italic;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        /* Card prompt area */
+        #cardPrompt {
+            background: linear-gradient(135deg, rgba(232, 220, 196, 0.7) 0%, rgba(212, 196, 168, 0.7) 100%);
+            border: 2px solid #8b7355;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        #cardPrompt h4 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        
+        #cardPrompt p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        /* Journal */
+        #journal {
+            width: 100%;
+            min-height: 400px;
+            background: linear-gradient(135deg, #fdfcf8 0%, #f5f5dc 100%);
+            border: 3px solid #8b7355;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+            resize: vertical;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        #journal::placeholder {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        /* Save controls */
+        .save-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .save-button {
+            flex: 1;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+        
+        .save-button:hover {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+        
+        .auto-save-indicator {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        /* Modals */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc4 100%);
+            border: 3px solid #8b7355;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #c0392b;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .help-section {
+            margin-bottom: 20px;
+        }
+        
+        .help-section h3 {
+            font-family: 'Libre Baskerville', serif;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .help-section p, .help-section ul, .help-section ol {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        /* Game over/won states */
+        .game-over, .game-won {
+            text-align: center;
+            padding: 30px;
+            background: rgba(231, 76, 60, 0.1);
+            border: 3px solid #c0392b;
+            border-radius: 10px;
+        }
+        
+        .game-won {
+            background: rgba(39, 174, 96, 0.1);
+            border-color: #27ae60;
+        }
+        
+        .game-over h3 {
+            color: #c0392b;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        .game-won h3 {
+            color: #27ae60;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .game-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Whoever Finds This Paper</h1>
+            <div class="subtitle">A Solo Journaling Game</div>
+            <div class="byline">By Shawn Graham</div>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('story')">📖 Story & Rules</button>
+            <button class="tab-button" onclick="switchTab('game')">🎮 Play Game</button>
+        </div>
+        
+        <!-- Story Tab -->
+        <div id="storyTab" class="tab-content active">
+            <div class="story-panel">
+                <div class="story-content">
+                    <h2>Life remains.... for now...</h2>
+                    
+                    <p>With hands blue from the cold, and ink made liquid only by burning some precious whale oil, Captain James Fitzjames did his best. He scrawled in the margins.</p>
+                    
+                    <p><em>'H.M. Ships Terror and Erebus were deserted on the 22nd April, 5 leagues NNW of this, having been beset since 12 Septr. 1846. Sir John Franklin died on the 11th June 1847 and the total loss by deaths in the Expedition has been to this date 9 Officers and 15 Men'.</em></p>
+                    
+                    <p>The paper, printed in several languages, enjoined the reader: 'Whoever finds this paper is requested to forward it to the Secretary of the Admiralty...'</p>
+                    <img src="paper.png">
+                    
+                    <p>'God damn it Franklin,' swore Fitzjames as he looked at the remaining crew.</p>
+                    
+                    <p>The First Mate caught his eye. It was time to go. Fitzjames jammed the paper under the pile of rocks, stood, and together the crew began to walk. To where? God only knows. 105 men, dragging sledges, over the April ice. In the distance, someone watched them go.</p>
+                    
+                    <p><strong>You are Captain James Fitzjames from the doomed Franklin Expedition, navigating the hostile Arctic as isolation, dwindling resources, and moral dilemmas weigh upon you. Guide your crew to salvation or to their doom; and either way, write it all down so someone knows what men you were.</strong></p>
+                    
+                    <p><strong>You are Wretched and Alone.</strong></p>
+                    
+                    <h2>Keep your log safe. It will vindicate your name.</h2>
+                    
+                    <p>'Whoever Finds This Paper' is a solo role-playing game. You take on the role of James Fitzjames, one of the officers on Franklin's ill-fated expedition searching for the North West Passage.</p>
+                    
+                    <p>You use cards and dice to generate prompts that describe the events you are reacting to, the situations you are in. You chronicle your response; your responses influence what happens at the next die roll, the next pull of the cards.</p>
+                    
+                    <p><strong>How would Fitzjames react?</strong></p>
+                    <p><strong>How will you react?</strong></p>
+                    
+                    <h2>Provisions</h2>
+                    
+                    <p>You can play this game in the browser; but if you choose to play it with pen and paper, you can print out all of the rules and information from <a href="https://shawngraham.github.io/solo-rpg/Whoever%20Finds%20This%20Paper%20v1.0%20S%20Graham.pdf"> this pdf</a>. 
+
+                    <p>For pen and paper play, you will need:</p>
+                    <ul>
+                        <li><strong>Standard Deck of Cards:</strong> Each suit and value drives the narrative with specific challenges and reflections.</li>
+                        <li><strong>Jenga Block Tower:</strong> Represents your psychological stability and the crew's cohesion.</li>
+                        <li><strong>Tokens:</strong> Start with 30 tokens representing food reserves. These can be replenished or diminished through gameplay.</li>
+                        <li><strong>Dice:</strong> Two standard dice. Used to navigate interaction potential with the Inuit, influencing Fitzjames's internal and external conflict.</li>
+                        <li><strong>A notebook to write in</strong></li>
+                        <li><strong>Suitable music</strong></li>
+                    </ul>
+                    
+                    <h2>Your First Entry</h2>
+                    
+                    <p>Begin by chronicling that day on the ice, that day when you neatly folded the paper and hid it in the cairn. Franklin is already dead. What lies ahead of you? You will find out.</p>
+                    
+                    <p>Shuffle the deck and erect the tower. Roll a d6 and pull that many cards; these are the things that have happened that day. Follow directions on the cards, and write your log as best you can.</p>
+                    
+                    <p><strong>Many cards will require you to roll dice to determine their outcomes.</strong> Use the separate dice rolling section to roll 1d6 for general events or 2d6 for Inuit encounters.</p>
+                    
+                    <p>And then put one foot in front of the other, and roll the dice again, for another day, there on the ice.</p>
+                    
+                    <p><strong>If the tower falls, you have collapsed into insanity and death swiftly follows. If you run out of food, well, how many men do you have left...?</strong></p>
+                    
+                    <h2>Events</h2>
+                    
+                    <h3>♠️ Spades: The Unforgiving North</h3>
+                    <p>There will be storms, frostbite, and ice entrapment. There could be bears.</p>
+                    
+                    <h3>♥️ Hearts: Crew Morale</h3>
+                    <p>We are the only men for hundreds and hundreds of miles. Aren't we?</p>
+                    
+                    <h3>♦️ Diamonds: Provisions and Supplies</h3>
+                    <p>There's only so much we can carry, that we can drag, over the ice.</p>
+                    
+                    <h3>♣️ Clubs: Mental Strain and Exhaustion</h3>
+                    <p>A British Officer always knows what to do, a British Officer never falters.</p>
+                    
+                    <h2>Interpreting Results</h2>
+                    
+                    <p>Certain card draws might trigger a die or dice roll. When rolling, consider the context of the interaction or observation being made.</p>
+                    
+                    <p>The roll result should lead to immediate in-game consequences and influence the narrative, either stabilizing your mental state or exacerbating fears and tensions.</p>
+                    
+                    <h3>Roll 1-3:</h3>
+                    <p>The outcome skews from less to a more negative, distrustful or fearful interpretation, reflective of the crew's heightened paranoia and cultural biases. This symbolizes a regression or negative response.</p>
+                    
+                    <h3>Roll 4-6:</h3>
+                    <p>The outcome skews from less to a more positive, insightful or accepting interpretation. This outcome represents hope, progress or enlightenment.</p>
+                    
+                    <h3>If rolling because of an Encounter with the Inuit: Roll 2 dice</h3>
+                    <ul>
+                        <li><strong>1-5:</strong> The Inuit presence feels threatening, amplifying the descent into madness. Pull two blocks.</li>
+                        <li><strong>6-9:</strong> A neutral encounter. Potential for reflection; no immediate effect but the prospect to address lingering dread in the journal entries.</li>
+                        <li><strong>10-12:</strong> Recognize moments of clarity. Successful observation of Inuit humanity and adaptability grants two tokens.</li>
+                    </ul>
+                    
+                    <h2>The Ending of Things</h2>
+                    
+                    <p><strong>If the tower falls,</strong> you have descended into madness and perish on the ice, in the tundra, even though help may have been there to hand.</p>
+                    
+                    <p><strong>Running out of tokens</strong> doesn't necessarily mean starvation... yet. For every two turns without a token in your possession, pull a block. But if you eat nothing for more than seven turns, well...</p>
+                    
+                    <h3>Pulling all four queens and having replenished supplies through consistent good relations with the Inuit (four or more 10+ rolls):</h3>
+                    <p>You are sustained, in this vast wilderness, and though members of your crew have perished, you reach the Hudson's Bay Company outpost. When you eventually reach London, you are held in contempt for adapting to 'native' ways. Your log is held as evidence for your eventual court martial.</p>
+                    
+                    <h3>The Final Push:</h3>
+                    <p>Is that... is that a ship in the distance? Can you reach it? If you can reach it in three more turns without dying / descending into madness - you must pull a block from the tower each turn, regardless of what a card says - you are saved by a simple whaling ship that returns you to Newfoundland, and eventually, to London. If the tower falls, you perish within site of salvation. But if not...</p>
+                    
+                    <p><strong>Burn the pages of your diary/log that you cannot afford for anyone to see.</strong></p>
+                    
+                    <p><em>You know which ones.</em></p>
+                    
+                    <h2>Afterword</h2>
+                    
+                    <p>I am fascinated by the possibility space that solo journaling RPGs may offer historical- and archaeo- gaming.</p>
+                    
+                    <p>In this present effort - my first - I am playing with the 'what if' of the Franklin expedition. I want the player to experience the disorientation of the North, but also, offer salvation to these doomed men. But is it a salvation that a 19th century British Officer would have recognized? The Franklin Expedition lived on in Inuit oral history for generations; it is harrowing reading.</p>
+                    
+                    <p>I also come to this from a background in simulation. Don't like the rules? Feel the balance is off? Feel free to make your own, but try to ground them in the historical/cultural realities of the scenario. Play through, then think with. We write to find out what we know; solo journaling rpg offer a powerful way, I think, of plumbing our own knowledge.</p>
+                    
+                    <p><strong>Shawn Graham CC-BY 2024</strong></p>
+                    
+                    <p style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #8b7355; font-size: 0.9em; font-style: italic;">
+                        This work is based on The Wretched (found at http://loottheroom.itch.io/wretched), product of Chris Bissette and Loot The Room, and licensed for our use under the Creative Commons Attribution 3.0 Unported license (http://creativecommons.org/licenses/by/3.0/).
+                        <img src="https://shawngraham.github.io/solo-rpg/VoWAHC.png">
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Tab -->
+        <div id="gameTab" class="tab-content">
+            <div class="game-panel">
+                <!-- Left Panel: Game Controls -->
+                <div class="panel">
+                    <div class="controls-panel">
+                        <!-- Character Introduction -->
+                        <div class="character-intro">
+                            <div class="date">April 22, 1848</div>
+                            <h2>Captain James Fitzjames</h2>
+                            <p>The paper is cached beneath the cairn. Franklin is dead. 105 men remain. The ice stretches endlessly in all directions.</p>
+                            <p style="margin-top: 15px; font-style: italic;">What lies ahead? You will find out.</p>
+                            <p style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #8b7355; font-size: 0.9em; color: #5d6d7e;">
+                                <strong>Quick Start:</strong> Roll for card count → Draw cards → Click cards to resolve → Roll dice when prompted
+                            </p>
+                        </div>
+                        
+                        <!-- Resources -->
+                        <div class="section">
+                            <h3>🍖 Food Reserves</h3>
+                            <div class="tokens-display">
+                                <span>Tokens Remaining</span>
+                                <span class="tokens-count" id="tokenCount">30</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stability AND Tower Pull - NOW TOGETHER -->
+                        <div class="section">
+                            <h3>🧠 Crew Cohesion</h3>
+                            <div class="stability-display">
+                                <div style="text-align: center; font-weight: bold; color: #2c3e50; margin-bottom: 8px;">
+                                    <span id="stabilityStatus">Stable</span>
+                                </div>
+                                <div class="stability-bar-container">
+                                    <div class="stability-bar" id="stabilityBar" style="width: 100%;">
+                                        <span id="stabilityText">100%</span>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 10px; font-size: 0.9em; text-align: center; color: #5d6d7e;">
+                                    Pull blocks to test stability. If it reaches 0%, madness and death follow.
+                                </div>
+                            </div>
+                            
+                            <!-- Tower Pull Button - MOVED HERE -->
+                            <button onclick="pullBlock()" id="pullBtn" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">⚠️ Pull a Block</button>
+                            <div style="margin-top: 8px; font-size: 0.85em; color: #5d6d7e; text-align: center; font-style: italic;">
+                                Some cards require you to pull blocks
+                            </div>
+                        </div>
+                        
+                        <!-- Dice Rolling - Start Turn -->
+                        <div class="section" style="background: rgba(52, 152, 219, 0.1); border: 2px solid #2980b9;">
+                            <h3>🎲 1. Start Your Turn</h3>
+                            <p style="font-size: 0.9em; color: #5d6d7e; margin-bottom: 10px;">Each turn, roll 1d6 to determine how many cards to draw for today's events</p>
+                            <button onclick="rollForCardCount()" style="width: 100%;">🎲 Roll 1d6 for Card Count</button>
+                            <div class="dice-container">
+                                <div class="die" id="dieCardCount">-</div>
+                            </div>
+                            <div id="cardCountResult" style="display: none; margin-top: 15px; padding: 12px; background: rgba(52, 152, 219, 0.2); border: 2px solid #2980b9; border-radius: 6px; text-align: center;">
+                                <strong style="color: #2980b9;">Draw <span id="cardsToDraw">0</span> cards for today</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <h3>🎴 2. Draw Cards</h3>
+                            <p style="font-size: 0.9em; color: #5d6d7e; margin-bottom: 10px;">Draw the number of cards indicated above. Click any card to resolve it.</p>
+                            <button onclick="drawCard()" id="drawCardBtn" disabled style="width: 100%;">Draw Next Card</button>
+                            <div id="cardsDrawnDisplay" style="margin-top: 10px; text-align: center; font-size: 0.9em; color: #5d6d7e;"></div>
+                            <div style="margin-top: 10px; text-align: center; font-size: 0.85em; color: #7f8c8d;">
+                                <span id="deckCount">52</span> cards remain in deck
+                            </div>
+                        </div>
+
+                        <!-- Dice Rolling - Resolve Events -->
+                        <div class="section">
+                            <h3>🎲 3. Roll Dice (When Prompted)</h3>
+                            <p style="font-size: 0.9em; color: #5d6d7e; margin-bottom: 10px;">Some cards require dice rolls to resolve their effects:</p>
+                            <div style="margin-bottom: 10px; font-size: 0.85em; color: #5d6d7e; line-height: 1.5;">
+                                <strong>Roll 1d6:</strong> 1-3 = Negative, 4-6 = Positive<br>
+                                <strong>Roll 2d6 (Inuit):</strong> 2-5 = Threatening, 6-9 = Neutral, 10-12 = Positive
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                                <button onclick="rollOneDie()" style="flex: 1;">Roll 1d6</button>
+                                <button onclick="rollTwoDice()" style="flex: 1;">Roll 2d6</button>
+                            </div>
+                            <div class="dice-container" id="eventDiceContainer"></div>
+                            <div id="eventDiceResult" style="margin-top: 10px; padding: 10px; background: rgba(232, 220, 196, 0.3); border-radius: 6px; text-align: center; font-size: 0.9em; min-height: 40px; display: flex; align-items: center; justify-content: center;">
+                                Ready to roll when prompted by a card
+                            </div>
+                        </div>
+                        
+                        <!-- Draw Cards -->
+
+                        
+                        <!-- Game Controls -->
+                        <div class="section">
+                            <h3>⚙️ Game Controls</h3>
+                            <button onclick="showHelp()" style="width: 100%; margin-bottom: 10px;">📖 How to Play</button>
+                            <button onclick="showCardReference()" style="width: 100%; margin-bottom: 10px;">🃏 Card Reference</button>
+                            <button onclick="newGame()" style="width: 100%; background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);">🔄 New Game</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Panel: Cards, Prompts & Journal -->
+                <div class="panel">
+                    <div style="position: relative; z-index: 1;">
+                        <h3 style="font-family: 'IM Fell English', serif; font-size: 1.8em; margin-bottom: 15px; color: #2c3e50;">📝 Captain's Log</h3>
+                        
+                        <!-- Cards Drawn This Turn - NEW SECTION -->
+                        <div style="margin-bottom: 15px;">
+                            <h4 style="font-family: 'Libre Baskerville', serif; color: #2c3e50; margin-bottom: 10px;">🎴 Today's Events</h4>
+                            <div class="cards-drawn-area" id="cardsDrawnArea">
+                                <div class="empty-cards-message">No cards drawn yet. Roll 1d6 to begin your day.</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Prompt Area -->
+                        <div id="cardPrompt">
+                            <h4>Begin Your Journey</h4>
+                            <p>To start your first day on the ice:</p>
+                            <ol style="margin: 10px 0 10px 20px; line-height: 1.6;">
+                                <li>Roll 1d6 using the "Start Your Turn" section to determine how many event cards to draw</li>
+                                <li>Draw cards one at a time until you've drawn them all</li>
+                                <li>Click any card above to see its event</li>
+                                <li>If a card requires a dice roll, use the "Roll Dice (When Prompted)" section</li>
+                                <li>Write your responses in your log below</li>
+                            </ol>
+                            <p style="margin-top: 10px; font-style: italic;">Your story matters. Record everything.</p>
+                        </div>
+                        
+                        <!-- Journal -->
+                        <textarea id="journal" placeholder="Begin by chronicling that day on the ice, that day when you neatly folded the paper and hid it in the cairn. Franklin is already dead. What lies ahead of you?
+
+You will find out..."></textarea>
+                        
+                        <!-- Save Controls -->
+                        <div class="save-section">
+                            <button class="save-button" onclick="saveJournal()">💾 Save Log</button>
+                            <button class="save-button" onclick="loadJournal()">📂 Load Log</button>
+                        </div>
+                        <div class="auto-save-indicator" id="saveIndicator"></div>
+                        <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="handleFileLoad(event)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeHelp()">×</button>
+            <h2 style="font-family: 'IM Fell English', serif; color: #2c3e50; margin-bottom: 20px;">How to Play</h2>
+            
+            <div class="help-section">
+                <h3>Setup</h3>
+                <p>You begin with 30 food tokens and full crew cohesion (100%). Your goal is to survive and maintain your sanity while leading your crew through the Arctic wasteland.</p>
+            </div>
+            
+            <div class="help-section">
+                <h3>Each Turn</h3>
+                <ol>
+                    <li><strong>Roll for Card Count:</strong> Click "Roll 1d6 for Card Count" to determine how many events happen today</li>
+                    <li><strong>Draw Cards:</strong> Click "Draw Next Card" repeatedly until all cards are drawn</li>
+                    <li><strong>Click Any Card:</strong> The drawn cards appear above your journal. Click any card to see its prompt</li>
+                    <li><strong>Roll When Prompted:</strong> If a card requires a dice roll, use the "Roll Dice (When Prompted)" section to roll 1d6 or 2d6</li>
+                    <li><strong>Respond in Your Log:</strong> Write how Fitzjames reacts to each event</li>
+                    <li><strong>Mark as Resolved:</strong> Click "Done with This Card" when you've addressed it</li>
+                    <li><strong>Follow Instructions:</strong> Some cards tell you to gain/lose tokens or pull blocks</li>
+                </ol>
+            </div>
+            
+            <div class="help-section">
+                <h3>Card Suits</h3>
+                <ul>
+                    <li><strong>♠️ Spades:</strong> The Unforgiving North - weather, ice, and environmental hazards</li>
+                    <li><strong>♥️ Hearts:</strong> Crew Morale - relationships, conflicts, and hope</li>
+                    <li><strong>♦️ Diamonds:</strong> Provisions & Supplies - food, equipment, and resources</li>
+                    <li><strong>♣️ Clubs:</strong> Mental Strain & Exhaustion - psychological challenges</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>Winning & Losing</h3>
+                <p><strong>You lose if:</strong></p>
+                <ul>
+                    <li>Your stability reaches 0% (madness and death)</li>
+                    <li>You run out of food for too long (starvation)</li>
+                </ul>
+                <p><strong>You can win by:</strong></p>
+                <ul>
+                    <li>Drawing all four Queens and maintaining good relations with the Inuit</li>
+                    <li>Drawing the Ace of Hearts (ship sighted) and surviving the Final Push</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>Dice Rolling</h3>
+                <p><strong>Two types of dice rolls:</strong></p>
+                
+                <p style="margin-top: 15px;"><strong>1. Roll for Card Count (Start of Turn):</strong></p>
+                <p>Roll 1d6 at the beginning of each day to determine how many event cards to draw.</p>
+                
+                <p style="margin-top: 15px;"><strong>2. Roll to Resolve Events (When Prompted):</strong></p>
+                <p>Many cards require dice rolls to determine their outcomes:</p>
+                <ul>
+                    <li><strong>Roll 1d6 (General Events):</strong>
+                        <ul>
+                            <li>1-3: Negative outcome (fear, paranoia, cultural bias)</li>
+                            <li>4-6: Positive outcome (hope, understanding, progress)</li>
+                        </ul>
+                    </li>
+                    <li><strong>Roll 2d6 (Inuit Encounters):</strong>
+                        <ul>
+                            <li>2-5: Threatening - pull 2 blocks</li>
+                            <li>6-9: Neutral - reflect in journal</li>
+                            <li>10-12: Positive - gain 2 tokens</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Card Reference Modal -->
+    <div id="cardRefModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 900px;">
+            <button class="modal-close" onclick="closeCardReference()">×</button>
+            <h2 style="font-family: 'IM Fell English', serif; color: #2c3e50; margin-bottom: 20px;">Card Reference</h2>
+            <div id="cardReferenceContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Game state variables
+        let tokens = 30;
+        let stability = 100;
+        let deck = [];
+        let drawnCards = []; // Array of {card, resolved} objects
+        let activeCardIndex = null;
+        let gameEnded = false;
+        let cardsToDraw = 0;
+        let cardsDrawnThisTurn = 0;
+        let queensDrawn = [];
+        let inuitPositiveRolls = 0;
+        let turnsWithoutFood = 0;
+        let aceOfHeartsDrawn = false;
+        let aceOfHeartsTokens = 0;
+        let savedProvisions = 0; // ADDED: Count of saved provisions
+        let finalPushTriggered = false; // ADDED: Flag for Final Push
+        let finalPushTurns = 0; // ADDED: Track turns in final push
+        
+        // Card data - comprehensive game content
+        const cardData = {
+            spades: {
+                'A': {
+                    title: 'Severe Storm',
+                    description: 'A severe storm annihilates your camp. Remove two blocks. Lose three tokens.',
+                    tokens: -3,
+                    blocks: 2
+                },
+                'K': {
+                    title: 'Navigation Instruments Fail',
+                    description: 'Navigation instruments fail due to cold. Write of the hope as direction is temporarily restored by following mysterious stone cairns that look like little... people? Roll 2d6 for deeper introspective insight about these Inuit markers.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'Q': {
+                    title: 'Severe Cold Snap',
+                    description: 'Severe cold snap hits. Attempts to maintain morale are interrupted by strange, guiding chants. Roll 2d6 to glean lessons or fear from this Inuit influence. Lose three tokens.',
+                    tokens: -3,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'J': {
+                    title: 'A Crew Member Dies',
+                    description: 'A crew member dies. Roll 1d6 to decide what happens to the body. If you have less than five tokens, you might need to make a hard choice.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '10': {
+                    title: 'Frozen Carcass',
+                    description: 'Find a frozen partially eaten carcass. On the carcass are unfamiliar tool marks. Or maybe animal tooth marks? Roll 2d6 to determine appreciation or suspicion of these Inuit hunting signs. Add one token.',
+                    tokens: 1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '9': {
+                    title: 'Treacherous Thaw',
+                    description: 'An unexpected thaw turns the ice treacherous. Roll 1d6 to determine how many men die going through.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '8': {
+                    title: 'Dangerous Wildlife',
+                    description: 'Dangerous wildlife threatens the camp. In their pursuit, you learn new hunting methods. Write about this revelation and roll 2d6 to comprehend their Inuit origins.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '7': {
+                    title: 'Blizzard Separates You',
+                    description: 'A blizzard separates you from your crew. In the distance, you spot a figure. Roll 1d6 to determine if this is a threat or a guide, affecting blocks removed.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '6': {
+                    title: 'Search for Open Land',
+                    description: 'Exhausting search for open land. Amidst the search, distant voices echo in an unfamiliar tongue. Roll 2d6 to interpret them as either disconcerting or insightful signs of Inuit presence.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '5': {
+                    title: 'Supplies Buried',
+                    description: 'Supplies buried under snow and ruined by frost. The crew discovers footprints leading away. Decide whether to follow and roll 2d6 for the potential outcome of this Inuit encounter. Lose a token.',
+                    tokens: -1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '4': {
+                    title: 'Ice Floes Barrier',
+                    description: 'Ice floes create a physical barrier. As you\'re forced to reroute, you glimpse distant figures on the ice. Roll 2d6 to determine the nature of this potential Inuit encounter. Lose a token.',
+                    tokens: -1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '3': {
+                    title: 'Endless Ice',
+                    description: 'The landscape is endlessly of ice. It never ends... it\'s all around you... you\'re trapped as surely as if in prison. Remove one block. Lose a token.',
+                    tokens: -1,
+                    blocks: 1
+                },
+                '2': {
+                    title: 'Frostbite',
+                    description: 'A crew member succumbs to frostbite. Remove one block.',
+                    tokens: 0,
+                    blocks: 1
+                }
+            },
+            hearts: {
+                'A': {
+                    title: 'A Ship! A Ship!',
+                    description: 'A ship is seen on the horizon. From here on out, at the end of the day, you and the men try to set aside some food, if providence allows (a die roll of 6), to reach that horizon. If enought food is set aside, you will be prepared to make the FINAL PUSH.',
+                    tokens: 0,
+                    blocks: 0,
+                    special: 'aceOfHearts'
+                },
+                'K': {
+                    title: 'Division Over Leadership',
+                    description: 'Thorough division among the crew over leadership. As decisions waver, if Inuit have been encountered, someone suggests trying to make contact with them. Others disagree. Roll 2d6 to influence unity or further division regarding this Inuit contact.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'Q': {
+                    title: 'Emotional Breakdown',
+                    description: 'Emotional breakdown of a close officer. He confesses to having eaten... human flesh. Pshaw, you don\'t believe it. No one believes it. Yes? Roll 1d6 to illustrate effect or dismissal in the journal.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                'J': {
+                    title: 'Personal Conflict',
+                    description: 'A personal conflict escalates. The fight is over food. Roll 1d6 for their impact on reconciliation efforts. Lose two tokens.',
+                    tokens: -2,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '10': {
+                    title: 'Forced Hymns',
+                    description: 'You force the men to sing hymns to keep our spirits up. Roll 1d6 to assess impact.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '9': {
+                    title: 'Food Hoarding',
+                    description: 'A man is discovered hoarding food. Take the food away. Roll 1d6 to determine if it calms tensions or stirs conflict.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '8': {
+                    title: 'Unexpected Laughter',
+                    description: 'Unexpected laughter breaks the silence. Roll 1d6 to expand understanding or to compound fear.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '7': {
+                    title: 'Remarkable Resilience',
+                    description: 'A crew member shows remarkable resilience.',
+                    tokens: 0,
+                    blocks: 0
+                },
+                '6': {
+                    title: 'Accusations of Theft',
+                    description: 'Accusations of theft circulate. Roll 1d6 to determine the truth of the matter. Add or lose one token accordingly.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '5': {
+                    title: 'Hysteria Spreading',
+                    description: 'An old friend is descending into hysteria. It seems to be... catching. Pull one block.',
+                    tokens: 0,
+                    blocks: 1
+                },
+                '4': {
+                    title: 'Rationing Disagreement',
+                    description: 'Tension arises after a rationing disagreement. A crew member suggests considering Inuit tactics. Roll 2d6 to see if this suggestion is heeded or dismissed. If heeded, add one token.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '3': {
+                    title: 'Visible Closeness',
+                    description: 'Crewmates become ...visibly close. Roll 1d6 for impact on morale.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '2': {
+                    title: 'Frightening Exchange',
+                    description: 'A frightening exchange between crew members. Roll 1d6 to decide how it affects morale.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                }
+            },
+            diamonds: {
+                'A': {
+                    title: 'Supplies Dangerously Low',
+                    description: 'Supplies run dangerously low, instigating panic. A crew member suggests learning from the Inuit. Roll 2d6 to see if the idea is adopted or rejected.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'K': {
+                    title: 'Contaminated Supplies',
+                    description: 'Discovery of contaminated supplies. Lose one token. Inuit fishing methods offer remedies. Roll 2d6 to decide on adoption or avoidance of these native techniques.',
+                    tokens: -1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'Q': {
+                    title: 'Crucial Shortfall',
+                    description: 'Misplaced stock leads to a crucial shortfall. In seeking solutions, discussion of \'native\' solutions that the sailors have seen elsewhere are mooted. Roll 2d6 for hope or hypothesis regarding Inuit methods. Lose one token.',
+                    tokens: -1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'J': {
+                    title: 'Sharing Warmth',
+                    description: 'Your brother officers\' love and affection leads to efforts to keep warm at night by sharing blankets.',
+                    tokens: 0,
+                    blocks: 0
+                },
+                '10': {
+                    title: 'Lice Everywhere',
+                    description: 'Lice. Lice everywhere. No relief! Pull one block.',
+                    tokens: 0,
+                    blocks: 1
+                },
+                '9': {
+                    title: 'Creative Meal',
+                    description: 'Creative meal keeps crew nourished longer with techniques borrowed from Inuit practices. Roll 2d6 to dictate appreciation or disregard of these native methods.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '8': {
+                    title: 'Bear Following',
+                    description: 'A bear is following you. Roll 1d6 for resolution.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '7': {
+                    title: 'Spoiled Food',
+                    description: 'Spoiled food leads to sickness. Pull one block.',
+                    tokens: 0,
+                    blocks: 1
+                },
+                '6': {
+                    title: 'Theft of Supplies',
+                    description: 'Theft of essential supplies by a crew member. One officer argues that you should cast the man out. Roll 1d6 to decide on conflict resolution and trust. Lose one token.',
+                    tokens: -1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '5': {
+                    title: 'Abandoned Camp',
+                    description: 'Encounter an abandoned but usable camp. Its origins are unknown, but speculated to be Inuit. Roll 2d6 to dictate use or rejection of this native site.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '4': {
+                    title: 'Fuel for Heat',
+                    description: 'Innovative approach secures fuel for heat. The idea stems from observed Inuit practices. Roll 2d6 to gauge adoption or skepticism amongst the men regarding these native techniques.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '3': {
+                    title: 'Spoiled Ration',
+                    description: 'A necessary ration is spoiled or lost. An Inuit method presents as a solution. Roll 2d6 to determine if it is adopted successfully. Add one token if successful.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '2': {
+                    title: 'Successful Hunt',
+                    description: 'Successful hunting trip brings back food. Among the spoils are traces of previous Inuit hunts. Roll 2d6 for a potential shift in respect and utilization of these native finds. Add one token.',
+                    tokens: 1,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                }
+            },
+            clubs: {
+                'A': {
+                    title: 'Unrelenting Nightmares',
+                    description: 'Unrelenting nightmares disturb sleep. They transform Inuit figures into demons. Roll 2d6 to differ between terror and awakening regarding these visions of native peoples. Pull one block.',
+                    tokens: 0,
+                    blocks: 1,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'K': {
+                    title: 'Encounter Inuit Hunting Party',
+                    description: 'Your group encounters an Inuit hunting party.... or are they daemons? Internal fears manifest into actions against whoever these creatures are. Roll 2d6 to determine the impact of this encounter on your clarity. Pull one block if clarity is diminished.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                'Q': {
+                    title: 'Flashback to Childhood',
+                    description: 'A flashback to sailing as a little boy, a memory of joy. Roll 1d6 to reinforce anguish or provide insight.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                'J': {
+                    title: 'Isolation Gnaws',
+                    description: 'Isolation gnaws at sanity. Roll 1d6 to dictate state of anguish. Pull one block.',
+                    tokens: 0,
+                    blocks: 1,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '10': {
+                    title: 'Officer Stops Moving',
+                    description: 'Your fellow officer stops moving. Roll 1d6 to decide if you turn his body over to the men.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '9': {
+                    title: 'Record the Aurora',
+                    description: 'Attempt to record the incredible aurora. You can almost hear it, there in the sky.',
+                    tokens: 0,
+                    blocks: 0
+                },
+                '8': {
+                    title: 'Steal from the Dead',
+                    description: 'You steal clothing off a dead man to wrap your feet, rationalizing the act. Roll 1d6 to influence emotional responses.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '7': {
+                    title: 'Peculiar Artifact',
+                    description: 'Discover a peculiar artifact, igniting curiosity likely of Inuit origin. Roll 2d6 for high impact or dismissal of these native remains.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '6': {
+                    title: 'Voices in the Night',
+                    description: 'Stray from camp in confusion. You hear voices in some other language echo through the night. Is it a memory? Roll 2d6 to guide as memory or fear regarding this Inuit presence. If fear, pull one block.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '2d6'
+                },
+                '5': {
+                    title: 'Treasured Possession Lost',
+                    description: 'The loss of a treasured possession sends you spiralling. Pull block.',
+                    tokens: 0,
+                    blocks: 1
+                },
+                '4': {
+                    title: 'Hallucinations',
+                    description: 'Hallucinations blur perception. Who are those people on the horizon? People? Roll 1d6 to choose between threat perception or revelation. In case of threat, pull block.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '3': {
+                    title: 'Monotony',
+                    description: 'Monotony breeds frustration. Roll 1d6 to invoke turmoil or tranquility. In case of turmoil, pull block.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                },
+                '2': {
+                    title: 'Lights in the Sky',
+                    description: 'Something about the lights in the night sky trigger a memory of warmth and safety? Or something else? Roll 1d6 to settle on clarity or confusion.',
+                    tokens: 0,
+                    blocks: 0,
+                    needsRoll: true,
+                    diceType: '1d6'
+                }
+            }
+        };
+        
+        // Initialize game
+        function initGame() {
+            initializeDeck();
+            updateDisplay();
+            loadGameState();
+        }
+        
+        function initializeDeck() {
+            const suits = ['spades', 'hearts', 'diamonds', 'clubs'];
+            const values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+            
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ suit, value });
+                }
+            }
+            
+            // Shuffle
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            
+            updateDisplay();
+        }
+        
+        function updateDisplay() {
+            document.getElementById('tokenCount').textContent = tokens;
+            document.getElementById('stabilityBar').style.width = stability + '%';
+            document.getElementById('stabilityText').textContent = stability + '%';
+            document.getElementById('deckCount').textContent = deck.length;
+            
+            // Update stability bar color
+            const stabilityBar = document.getElementById('stabilityBar');
+            stabilityBar.className = 'stability-bar';
+            if (stability < 50) {
+                stabilityBar.classList.add('warning');
+            }
+            if (stability < 20) {
+                stabilityBar.classList.remove('warning');
+                stabilityBar.classList.add('critical');
+            }
+            
+            // Update stability status
+            let status = '';
+            if (stability >= 70) {
+                status = 'Stable';
+            } else if (stability >= 40) {
+                status = 'Wavering';
+            } else {
+                status = 'Critical';
+            }
+            document.getElementById('stabilityStatus').textContent = status;
+
+            // Update card prompt text if in final push
+            if (finalPushTriggered) {
+                document.getElementById('cardPrompt').innerHTML = `
+                    <h4>🔥 The Final Push! 🔥</h4>
+                    <p>Survive ${3 - finalPushTurns} more turn${(3 - finalPushTurns) !== 1 ? 's' : ''}!</p>
+                    <p>Pull a block each turn, regardless of drawn cards.</p>
+                `;
+            }
+            
+            // Check for game over conditions
+            if (stability <= 0 && !gameEnded) {
+                endGameTowerFall();
+            }
+            
+            if (tokens <= 0 && !gameEnded) {
+                turnsWithoutFood++;
+                if (turnsWithoutFood > 7) {
+                    endGameStarvation();
+                } else if (turnsWithoutFood % 2 === 0) {
+                    stability -= 10;
+                    updateDisplay();
+                }
+            } else {
+                turnsWithoutFood = 0;
+            }
+        }
+        
+        function rollForCardCount() {
+            if (gameEnded) return;
+
+            // Check if in Final Push
+            if (finalPushTriggered) {
+                alert("No need to roll for cards - it's the Final Push! Focus on surviving.");
+                return;
+            }
+            
+            const die = document.getElementById('dieCardCount');
+            die.classList.add('rolling');
+            
+            setTimeout(() => {
+                const result = Math.floor(Math.random() * 6) + 1;
+                die.textContent = result;
+                die.classList.remove('rolling');
+                
+                cardsToDraw = result;
+                cardsDrawnThisTurn = 0;
+                drawnCards = []; // Reset drawn cards for new turn
+                
+                document.getElementById('cardCountResult').style.display = 'block';
+                document.getElementById('cardsToDraw').textContent = result;
+                document.getElementById('drawCardBtn').disabled = false;
+                
+                // Clear card prompt
+                document.getElementById('cardPrompt').innerHTML = `
+                    <h4>New Day Begins</h4>
+                    <p>Draw ${result} card${result > 1 ? 's' : ''} to see what events unfold today.</p>
+                `;
+                
+                updateCardsDrawnDisplay();
+                saveGameState();
+            }, 600);
+        }
+        
+        function rollOneDie() {
+            if (gameEnded) return;
+            
+            const container = document.getElementById('eventDiceContainer');
+            const resultDiv = document.getElementById('eventDiceResult');
+            
+            // Create die element
+            container.innerHTML = '<div class="die rolling" id="eventDie1">?</div>';
+            
+            setTimeout(() => {
+                const result = Math.floor(Math.random() * 6) + 1;
+                const die = document.getElementById('eventDie1');
+                die.textContent = result;
+                die.classList.remove('rolling');
+                
+                // Interpret result
+                let interpretation = '';
+                let interpretColor = '';
+                if (result <= 3) {
+                    interpretation = 'Negative outcome (fear, paranoia, cultural bias)';
+                    interpretColor = '#c0392b';
+                } else {
+                    interpretation = 'Positive outcome (hope, understanding, progress)';
+                    interpretColor = '#27ae60';
+                }
+                
+                resultDiv.innerHTML = `
+                    <div style="font-weight: bold; color: ${interpretColor}; margin-bottom: 5px;">Result: ${result}</div>
+                    <div style="font-size: 0.9em;">${interpretation}</div>
+                `;
+            }, 600);
+        }
+        
+        function rollTwoDice() {
+            if (gameEnded) return;
+            
+            const container = document.getElementById('eventDiceContainer');
+            const resultDiv = document.getElementById('eventDiceResult');
+            
+            // Create two dice
+            container.innerHTML = `
+                <div class="die rolling" id="eventDie1">?</div>
+                <div class="die rolling" id="eventDie2">?</div>
+            `;
+            
+            setTimeout(() => {
+                const die1Result = Math.floor(Math.random() * 6) + 1;
+                const die2Result = Math.floor(Math.random() * 6) + 1;
+                const total = die1Result + die2Result;
+                
+                document.getElementById('eventDie1').textContent = die1Result;
+                document.getElementById('eventDie1').classList.remove('rolling');
+                document.getElementById('eventDie2').textContent = die2Result;
+                document.getElementById('eventDie2').classList.remove('rolling');
+                
+                // Interpret result for Inuit encounters
+                let interpretation = '';
+                let interpretColor = '';
+                let effect = '';
+                
+                if (total >= 2 && total <= 5) {
+                    interpretation = 'Threatening Encounter';
+                    interpretColor = '#c0392b';
+                    effect = 'The Inuit presence feels threatening, amplifying descent into madness. Pull two blocks.';
+                } else if (total >= 6 && total <= 9) {
+                    interpretation = 'Neutral Encounter';
+                    interpretColor = '#f39c12';
+                    effect = 'Potential for reflection. No immediate effect, but address lingering dread in your journal.';
+                } else {
+                    interpretation = 'Positive Encounter';
+                    interpretColor = '#27ae60';
+                    effect = 'Recognize moments of clarity. Successful observation of Inuit humanity and adaptability grants two tokens.';
+                    tokens += 2;
+                    inuitPositiveRolls++;
+                    updateDisplay();
+                }
+                
+                resultDiv.innerHTML = `
+                    <div style="font-weight: bold; color: ${interpretColor}; margin-bottom: 5px;">
+                        Result: ${die1Result} + ${die2Result} = ${total}
+                    </div>
+                    <div style="font-weight: bold; color: ${interpretColor}; margin-bottom: 5px;">
+                        ${interpretation}
+                    </div>
+                    <div style="font-size: 0.85em; line-height: 1.4;">
+                        ${effect}
+                    </div>
+                `;
+                
+                saveGameState();
+            }, 600);
+        }
+        
+        // NEW: Update cards drawn display
+        function updateCardsDrawnDisplay() {
+            const container = document.getElementById('cardsDrawnArea');
+            
+            if (drawnCards.length === 0) {
+                container.className = 'cards-drawn-area empty';
+                container.innerHTML = '<div class="empty-cards-message">No cards drawn yet. Draw cards to begin.</div>';
+                document.getElementById('cardsDrawnDisplay').textContent = '';
+                return;
+            }
+            
+            container.className = 'cards-drawn-area';
+            
+            const suitSymbols = {
+                'spades': '♠',
+                'hearts': '♥',
+                'diamonds': '♦',
+                'clubs': '♣'
+            };
+            
+            container.innerHTML = drawnCards.map((cardObj, index) => {
+                const card = cardObj.card;
+                const isRed = card.suit === 'hearts' || card.suit === 'diamonds';
+                const colorClass = isRed ? 'red-card' : 'black-card';
+                const resolvedClass = cardObj.resolved ? 'resolved' : '';
+                const activeClass = activeCardIndex === index ? 'active' : '';
+                const resolvedBadge = cardObj.resolved ? '<div class="drawn-card-resolved-badge">✓</div>' : '';
+                
+                return `
+                    <div class="drawn-card ${colorClass} ${resolvedClass} ${activeClass}" onclick="viewCard(${index})">
+                        ${resolvedBadge}
+                        <div class="drawn-card-value">${card.value}</div>
+                        <div class="drawn-card-suit">${suitSymbols[card.suit]}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update counter
+            document.getElementById('cardsDrawnDisplay').textContent = 
+                `Cards drawn: ${cardsDrawnThisTurn}/${cardsToDraw}`;
+        }
+        
+        function drawCard() {
+            if (deck.length === 0) {
+                alert('Deck empty - reshuffle!');
+                initializeDeck();
+                return;
+            }
+            
+            if (cardsDrawnThisTurn >= cardsToDraw) {
+                alert('You\'ve drawn all cards for this turn. Roll the dice for a new day.');
+                return;
+            }
+
+            // Check if in Final Push
+            if (finalPushTriggered) {
+                alert("No need to draw cards - it's the Final Push! Focus on surviving.");
+                return;
+            }
+            
+            const card = deck.pop();
+            drawnCards.push({ card: card, resolved: false });
+            cardsDrawnThisTurn++;
+            
+            updateCardsDrawnDisplay();
+            updateDisplay();
+            
+            if (cardsDrawnThisTurn >= cardsToDraw) {
+                document.getElementById('drawCardBtn').disabled = true;
+                document.getElementById('cardPrompt').innerHTML = `
+                    <h4>All Cards Drawn</h4>
+                    <p>Click any card above to see its event and resolve it. You can address them in any order.</p>
+                `;
+                
+                // Check for Ace of Hearts end-of-day roll
+                if (aceOfHeartsDrawn && !gameEnded) {
+                    setTimeout(() => {
+                        if (confirm('End of day: Roll die for Ace of Hearts ship progress?')) {
+                            rollForAceOfHearts();
+                        }
+                        else if (finalPushTriggered) {
+                                    endTurnFinalPush();
+                        }
+                    }, 1000);
+                }
+                else if (finalPushTriggered) {
+                    setTimeout(() => {
+                        endTurnFinalPush();
+                    }, 1000);
+                }
+            }
+            
+            saveGameState();
+        }
+        
+        // NEW: View a specific card
+        function viewCard(index) {
+            const cardObj = drawnCards[index];
+            if (!cardObj || cardObj.resolved) return;
+            
+            activeCardIndex = index;
+            updateCardsDrawnDisplay();
+            displayPrompt(cardObj.card, index);
+        }
+        
+        // NEW: Mark card as resolved
+        function markCardResolved(index) {
+            if (drawnCards[index]) {
+                drawnCards[index].resolved = true;
+                activeCardIndex = null;
+                updateCardsDrawnDisplay();
+                
+                const unresolvedCount = drawnCards.filter(c => !c.resolved).length;
+                if (unresolvedCount === 0) {
+
+                   // Check if Final Push - skip new turn roll
+                   if (!finalPushTriggered){
+                        document.getElementById('cardPrompt').innerHTML = `
+                            <h4 style="color: #27ae60;">✓ All Events Resolved!</h4>
+                            <p>Roll 1d6 to start your next day on the ice.</p>
+                        `;
+                    }
+                } else {
+                    document.getElementById('cardPrompt').innerHTML = `
+                        <h4>Card Resolved</h4>
+                        <p>${unresolvedCount} card${unresolvedCount > 1 ? 's' : ''} remaining. Click any unresolved card above to continue.</p>
+                    `;
+                }
+                
+                saveGameState();
+            }
+        }
+        
+        // NEW: Display prompt for selected card
+        function displayPrompt(card, cardIndex) {
+            const promptPanel = document.getElementById('cardPrompt');
+            const cardInfo = cardData[card.suit][card.value];
+            
+            const suitSymbols = {
+                'spades': '♠️',
+                'hearts': '♥️',
+                'diamonds': '♦️',
+                'clubs': '♣️'
+            };
+            
+            if (!cardInfo) {
+                promptPanel.innerHTML = `
+                    <h4>${card.value}${suitSymbols[card.suit]} - Unknown Event</h4>
+                    <p>No specific prompt defined.</p>
+                    <button onclick="markCardResolved(${cardIndex})" style="margin-top: 15px;">✓ Done with This Card</button>
+                `;
+                return;
+            }
+            
+            let html = `
+                <h4>${suitSymbols[card.suit]} ${cardInfo.title}</h4>
+                <p style="font-size: 1.05em; line-height: 1.6; margin: 15px 0;">${cardInfo.description}</p>
+            `;
+            
+            // Token adjustment buttons - DON'T auto-apply
+            if (cardInfo.tokens !== 0) {
+                const tokenColor = cardInfo.tokens > 0 ? '#27ae60' : '#c0392b';
+                const tokenText = cardInfo.tokens > 0 ? `Gain ${cardInfo.tokens}` : `Lose ${Math.abs(cardInfo.tokens)}`;
+                html += `
+                    <div style="margin-top: 15px; padding: 12px; background: rgba(${cardInfo.tokens > 0 ? '39, 174, 96' : '192, 57, 43'}, 0.1); border: 2px solid ${tokenColor}; border-radius: 6px;">
+                        <div style="font-weight: bold; color: ${tokenColor}; margin-bottom: 8px;">
+                            Food Tokens: ${tokenText} ${Math.abs(cardInfo.tokens) === 1 ? 'token' : 'tokens'}
+                        </div>
+                        <button onclick="adjustTokens(${cardInfo.tokens}, ${cardIndex})" style="background: linear-gradient(135deg, ${cardInfo.tokens > 0 ? '#27ae60, #229954' : '#e74c3c, #c0392b'}); width: 100%;">
+                            ${cardInfo.tokens > 0 ? '➕' : '➖'} Apply Token Change
+                        </button>
+                    </div>
+                `;
+            }
+            
+            if (cardInfo.blocks > 0) {
+                html += `<p style="color: #c0392b; font-weight: bold; margin-top: 10px;">
+                    ⚠️ Pull ${cardInfo.blocks} block${cardInfo.blocks > 1 ? 's' : ''} from the tower!
+                </p>`;
+            }
+            
+            if (cardInfo.needsRoll) {
+                const diceType = cardInfo.diceType || '1d6'; // Default to 1d6 if not specified
+                html += `<p style="color: #2980b9; font-weight: bold; margin-top: 10px; padding: 10px; background: rgba(41, 128, 185, 0.1); border-radius: 6px;">
+                    🎲 Roll ${diceType} to determine the outcome
+                </p>`;
+            }
+            
+            // Special card handling
+            if (cardInfo.special === 'aceOfHearts') {
+                aceOfHeartsDrawn = true;
+                aceOfHeartsTokens = 0;
+                html += `<p style="color: #27ae60; font-weight: bold; margin-top: 15px; padding: 10px; background: rgba(39, 174, 96, 0.1); border-radius: 6px;">
+                    🚢 SALVATION IS IN SIGHT! At the end of each day, roll a die. On a 6, there is just enough food to set aside for the future. When the stock is high enough, we'll try for THE FINAL PUSH!
+                </p>`;
+            }
+            
+            if (card.value === 'Q') {
+                queensDrawn.push(card.suit);
+                if (queensDrawn.length === 4 && inuitPositiveRolls >= 4) {
+                    html += `<p style="color: #27ae60; font-weight: bold; margin-top: 15px; padding: 10px; background: rgba(39, 174, 96, 0.1); border-radius: 6px;">
+                        👑 ALL FOUR QUEENS! You have found salvation through the Inuit. Prepare for your fate...
+                    </p>`;
+                }
+            }
+            
+            html += `<button onclick="markCardResolved(${cardIndex})" style="margin-top: 15px; background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">
+                ✓ Done with This Card
+            </button>`;
+            
+            promptPanel.innerHTML = html;
+            saveGameState();
+        }
+        
+        // NEW: Manual token adjustment function
+        function adjustTokens(amount, cardIndex) {
+            tokens += amount;
+            if (tokens < 0) tokens = 0;
+            updateDisplay();
+            
+            // Show feedback
+            const feedback = amount > 0 ? 
+                `✓ Added ${amount} food token${amount !== 1 ? 's' : ''}` : 
+                `✗ Lost ${Math.abs(amount)} food token${amount !== -1 ? 's' : ''}`;
+            
+            // Update button to show it was applied
+            const button = event.target;
+            button.textContent = '✓ Applied';
+            button.disabled = true;
+            button.style.opacity = '0.6';
+            
+            saveGameState();
+        }
+        
+        function rollForAceOfHearts() {
+            const result = Math.floor(Math.random() * 6) + 1;
+            
+            if (result === 6 && tokens > 0) {
+                tokens--;
+                aceOfHeartsTokens++;
+                savedProvisions++; // ADDED: Increment saved provisions
+                updateDisplay();
+                
+                if (savedProvisions >= 10 && !finalPushTriggered) { // CHECK savedProvisions
+                    startFinalPush();
+                } else if (savedProvisions >= 10) { // IF FINAL PUSH ALREADY TRIGGERED, JUST DISPLAY PROGRESS
+                    alert(`Rolled a 6! Added 1 token to ship progress (${savedProvisions}/10). THE FINAL PUSH has begun! ${3 - finalPushTurns} turns left!`); // MESSAGE ALTERED
+                    endTurnFinalPush();
+                } else {
+                    alert(`Rolled a 6! Added 1 token to ship progress (${savedProvisions}/10). Keep surviving!`); // MESSAGE ALTERED
+                }
+
+            } else if (result === 6 && tokens === 0) {
+                alert(`Rolled a 6, but you have no food tokens to add to ship progress!`);
+                if (finalPushTriggered) {
+                        endTurnFinalPush();
+                    }
+            } else {
+                alert(`Rolled a ${result}. No progress toward the ship today.`);
+                if (finalPushTriggered) {
+                        endTurnFinalPush();
+                    }
+            }
+            
+            saveGameState();
+        }
+        
+        function startFinalPush() {
+            alert('You have 10 tokens saved! The ship awaits! THE FINAL PUSH: Survive 3 more turns, pulling one block each turn regardless of cards. If the tower falls, you perish within sight of salvation...');
+            finalPushTriggered = true; // SET FLAG
+            finalPushTurns = 0; // RESET COUNTER
+            updateDisplay();
+        }
+
+        function endTurnFinalPush() {
+            if (finalPushTriggered) {
+                finalPushTurns++;
+                pullBlock(); // Force a block pull
+
+                if (finalPushTurns >= 3) {
+                    gameWonFinalPush(); // Win if survived three turns
+                } else {
+                    alert(`🔥 THE FINAL PUSH: Pulled a block! ${3 - finalPushTurns} turns remaining! 🔥`);
+                    // Set up next turn - clear cards and enable roll
+                    cardsDrawnThisTurn = 0;
+                    drawnCards = [];
+                    document.getElementById('cardsDrawnArea').innerHTML = '<div class="empty-cards-message">No cards drawn yet. Roll 1d6 to begin your day.</div>'; // Clear cards
+                    document.getElementById('cardsDrawnArea').className = 'cards-drawn-area empty';
+                    document.getElementById('cardPrompt').innerHTML = `
+                        <h4>🔥 The Final Push! 🔥</h4>
+                        <p>Survive ${3 - finalPushTurns} more turn${(3 - finalPushTurns) !== 1 ? 's' : ''}!</p>
+                        <p>Pull a block each turn, regardless of drawn cards.</p>
+                    `;
+
+                    saveGameState();
+                }
+            }
+        }
+        
+        function pullBlock() {
+            if (gameEnded) return;
+            
+            // Simulate pulling a block (reduces stability)
+            const pullAmount = Math.floor(Math.random() * 15) + 5; // 5-20% reduction
+            stability = Math.max(0, stability - pullAmount);
+            
+            updateDisplay();
+            
+            if (stability <= 0) {
+                endGameTowerFall();
+            }
+            
+            saveGameState();
+        }
+        
+        function endGameTowerFall() {
+            gameEnded = true;
+            document.getElementById('drawCardBtn').disabled = true;
+            document.getElementById('pullBtn').disabled = true;
+            
+            document.getElementById('cardPrompt').innerHTML = `
+                <div class="game-over">
+                    <h3>💔 Descent into Madness</h3>
+                    <p>Your psychological stability has collapsed. The ice, the cold, the isolation - it has all become too much.</p>
+                    <p style="margin-top: 20px; font-style: italic; color: #e74c3c;">Death swiftly follows, even though help may have been there to hand.</p>
+                    <p style="margin-top: 15px;">Record your final thoughts in your log.</p>
+                    <button onclick="newGame()" style="margin-top: 20px;">Begin Another Journey</button>
+                </div>
+            `;
+        }
+
+        function gameWonFinalPush() {
+            gameEnded = true;
+            document.getElementById('drawCardBtn').disabled = true;
+            document.getElementById('pullBtn').disabled = true;
+    
+            document.getElementById('cardPrompt').innerHTML = `
+                <div class="game-won">
+                    <h3>🎉 Salvation Achieved! 🎉</h3>
+                    <p>You survived the Final Push! The whaling ship has rescued you and your remaining crew.</p>
+                    <p style="margin-top: 20px;">Burn the pages of your diary/log that you cannot afford for anyone to see. You know which ones.</p>
+                    <p style="margin-top: 15px;">Record your triumphant return (and the secrets you keep) in your log.</p>
+                    <button onclick="newGame()" style="margin-top: 20px;">Begin Another Journey</button>
+                </div>
+            `;
+        }
+        
+        function endGameStarvation() {
+            gameEnded = true;
+            document.getElementById('drawCardBtn').disabled = true;
+            document.getElementById('pullBtn').disabled = true;
+            
+            document.getElementById('cardPrompt').innerHTML = `
+                <div class="game-over">
+                    <h3>💔 Death by Starvation</h3>
+                    <p>You have eaten nothing for more than seven turns. Weakness overcomes you. The cold embraces you at last.</p>
+                    <p style="margin-top: 20px; font-style: italic; color: #e74c3c;">How many men do you have left...?</p>
+                    <p style="margin-top: 15px;">Record your final entry.</p>
+                    <button onclick="newGame()" style="margin-top: 20px;">Begin Another Journey</button>
+                </div>
+            `;
+        }
+        
+        let saveTimeout;
+        function autoSaveJournal() {
+            clearTimeout(saveTimeout);
+            document.getElementById('saveIndicator').textContent = 'Saving...';
+            saveTimeout = setTimeout(() => {
+                saveGameState();
+                document.getElementById('saveIndicator').textContent = `Saved at ${new Date().toLocaleTimeString()}`;
+            }, 1000);
+        }
+        
+        function saveJournal() {
+            const text = document.getElementById('journal').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `fitzjames-log-${new Date().toISOString().slice(0,10)}.txt`;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+        
+        function loadJournal() {
+            document.getElementById('fileInput').click();
+        }
+        
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('journal').value = e.target.result;
+                    autoSaveJournal();
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        function saveGameState() {
+            const state = {
+                tokens,
+                stability,
+                deck,
+                drawnCards,
+                activeCardIndex,
+                journal: document.getElementById('journal').value,
+                gameEnded,
+                cardsToDraw,
+                cardsDrawnThisTurn,
+                queensDrawn,
+                inuitPositiveRolls,
+                turnsWithoutFood,
+                aceOfHeartsDrawn,
+                aceOfHeartsTokens,
+                savedProvisions,
+                finalPushTriggered,
+                finalPushTurns
+            };
+            localStorage.setItem('franklinGameState', JSON.stringify(state));
+        }
+        
+        function loadGameState() {
+            const saved = localStorage.getItem('franklinGameState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                tokens = state.tokens || 30;
+                stability = state.stability || 100;
+                deck = state.deck || [];
+                drawnCards = state.drawnCards || [];
+                activeCardIndex = state.activeCardIndex || null;
+                gameEnded = state.gameEnded || false;
+                cardsToDraw = state.cardsToDraw || 0;
+                cardsDrawnThisTurn = state.cardsDrawnThisTurn || 0;
+                queensDrawn = state.queensDrawn || [];
+                inuitPositiveRolls = state.inuitPositiveRolls || 0;
+                turnsWithoutFood = state.turnsWithoutFood || 0;
+                aceOfHeartsDrawn = state.aceOfHeartsDrawn || false;
+                aceOfHeartsTokens = state.aceOfHeartsTokens || 0;
+                savedProvisions = state.savedProvisions || 0;
+                finalPushTriggered = state.finalPushTriggered || false;
+                finalPushTurns = state.finalPushTurns || 0;
+                
+                document.getElementById('journal').value = state.journal || '';
+                
+                if (cardsToDraw > 0) {
+                    document.getElementById('cardCountResult').style.display = 'block';
+                    document.getElementById('cardsToDraw').textContent = cardsToDraw;
+                }
+                
+                updateCardsDrawnDisplay();
+                updateDisplay();
+                
+                if (deck.length === 0) {
+                    initializeDeck();
+                }
+                
+                if (gameEnded) {
+                    document.getElementById('drawCardBtn').disabled = true;
+                    document.getElementById('pullBtn').disabled = true;
+                }
+                
+                // Restore Final Push prompt, if active
+                if (finalPushTriggered) {
+                     document.getElementById('cardPrompt').innerHTML = `
+                        <h4>🔥 The Final Push! 🔥</h4>
+                        <p>Survive ${3 - finalPushTurns} more turn${(3 - finalPushTurns) !== 1 ? 's' : ''}!</p>
+                        <p>Pull a block each turn, regardless of drawn cards.</p>
+                    `;
+                }
+            }
+        }
+        
+        function newGame() {
+            if (confirm('Start a new journey? This will erase all current progress.')) {
+                localStorage.removeItem('franklinGameState');
+                location.reload();
+            }
+        }
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            if (tabName === 'story') {
+                document.getElementById('storyTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[0].classList.add('active');
+            } else if (tabName === 'game') {
+                document.getElementById('gameTab').classList.add('active');
+                document.querySelectorAll('.tab-button')[1].classList.add('active');
+            }
+        }
+        
+        function showHelp() {
+            document.getElementById('helpModal').classList.add('active');
+        }
+        
+        function closeHelp() {
+            document.getElementById('helpModal').classList.remove('active');
+        }
+        
+        function showCardReference() {
+            populateCardReference();
+            document.getElementById('cardRefModal').classList.add('active');
+        }
+        
+        function closeCardReference() {
+            document.getElementById('cardRefModal').classList.remove('active');
+        }
+        
+        function populateCardReference() {
+            const suitInfo = {
+                spades: { symbol: '♠️', name: 'The Unforgiving North', color: '#2c3e50' },
+                hearts: { symbol: '♥️', name: 'Crew Morale', color: '#c0392b' },
+                diamonds: { symbol: '♦️', name: 'Provisions and Supplies', color: '#2980b9' },
+                clubs: { symbol: '♣️', name: 'Mental Strain and Exhaustion', color: '#27ae60' }
+            };
+            
+            const values = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
+            const container = document.getElementById('cardReferenceContent');
+            
+            let html = '';
+            
+            for (let suit in suitInfo) {
+                html += `<div style="margin-bottom: 30px;">
+                    <h3 style="color: ${suitInfo[suit].color}; font-family: 'Libre Baskerville', serif;">${suitInfo[suit].symbol} ${suitInfo[suit].name}</h3>`;
+                
+                for (let value of values) {
+                    if (cardData[suit][value]) {
+                        const card = cardData[suit][value];
+                        html += `<div style="margin: 15px 0; padding: 10px; background: rgba(236,240,241,0.3); border-left: 3px solid ${suitInfo[suit].color}; border-radius: 4px;">
+                            <strong>${value}${suitInfo[suit].symbol} - ${card.title}</strong>
+                            <p style="margin-top: 5px; font-size: 0.95em;">${card.description}</p>`;
+                        
+                        if (card.tokens !== 0) {
+                            html += `<p style="margin-top: 5px; color: ${card.tokens > 0 ? '#27ae60' : '#c0392b'};"><strong>Food: ${card.tokens > 0 ? '+' : ''}${card.tokens}</strong></p>`;
+                        }
+                        if (card.blocks > 0) {
+                            html += `<p style="margin-top: 5px; color: #c0392b;"><strong>Pull ${card.blocks} block(s)</strong></p>`;
+                        }
+                        
+                        html += `</div>`;
+                    }
+                }
+                
+                html += `</div>`;
+            }
+            
+            container.innerHTML = html;
+        }
+        
+        // Initialize on load
+        window.onload = initGame;
+        
+        // Auto-save journal on input
+        document.getElementById('journal').addEventListener('input', autoSaveJournal);
+        
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
